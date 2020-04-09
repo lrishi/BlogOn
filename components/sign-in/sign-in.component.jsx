@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, TextInput, Button } from 'react-native';
+import { ScrollView, TextInput, Button, Text } from 'react-native';
 import { auth } from '../../firebase/firebase.utils';
 
 import './sign-in.styles';

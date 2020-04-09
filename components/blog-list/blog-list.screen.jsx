@@ -1,7 +1,6 @@
 import React from 'react';
 import BlogList from './blog-list.component';
 
-
 class BlogListScreen extends React.Component {
 
     static navigationOptions = {
@@ -10,7 +9,6 @@ class BlogListScreen extends React.Component {
 
     render () {
         return ( <BlogList /> );
-
     };
 }
 

@@ -1,25 +1,24 @@
 import React from 'react';
-import { ScrollView, Text } from 'react-native';
+import { ScrollView, Text, Button } from 'react-native';
 import { auth } from '../../firebase/firebase.utils';
 
 import './sign-out.styles';
 
-const INITIAL_STATE = {
-    email: '',
-    password: '',
-};
 
 class SignOut extends React.Component {
     constructor( props ) {
         super( props );
-        this.state = INITIAL_STATE;
     }
 
+    signOutHandler = () => {
+        auth.signOut();
+    };
 
     render () {
         return (
             <ScrollView>
-                <Text > Sign out page!</Text>
+                <Text > We'll miss you! Are you sure you want to Sign Out?</Text>
+                <Button title="Sign Me Out" onPress={ this.signOutHandler } />
             </ScrollView>
         );
     }

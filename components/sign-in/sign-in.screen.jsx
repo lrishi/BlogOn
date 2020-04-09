@@ -10,7 +10,6 @@ class SignInScreen extends React.Component {
 
     render () {
         return ( <SignIn /> );
-
     };
 }
 

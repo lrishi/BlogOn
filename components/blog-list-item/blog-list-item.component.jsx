@@ -1,21 +1,22 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 
 
-const BlogListItem = ( { blog: { id,
-    author,
-    title,
-    image,
-    text,
-    ts_add,
-    ts_mod } } ) => (
-
+const BlogListItem = ( { blog } ) => {
+    return (
         <View>
-            <Text>{ title }</Text>
-            <Text>{ text }</Text>
-            <Text>Added on { ts_add }</Text>
+            <Text>{ blog.title }</Text>
+            <Text>By { blog.author.displayName }</Text>
+
+            <Image
+                style={ { width: '100%', height: 300, resizeMode: 'stretch' } }
+                source={ { uri: `data:image/gif;base64,${ blog.image }` } }
+            />
+            <Text>Added on { blog.ts_added.toDate().toString() }, Modified on { blog.ts_updated.toDate().toString() }</Text>
+            <Text>{ blog.editor }</Text>
         </View>
 
     );
+};
 
 export default BlogListItem;

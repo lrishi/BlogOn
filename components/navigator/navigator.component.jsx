@@ -7,46 +7,26 @@ import SignUpScreen from '../../components/sign-up/sign-up.screen';
 import BlogListScreen from '../../components/blog-list/blog-list.screen';
 import SignInScreen from '../../components/sign-in/sign-in.screen';
 import SignOutScreen from '../../components/sign-out/sign-out.screen';
-import BlogEditorScreen from '../../components/blog-editor/blog-editor.component';
+import BlogEditorScreen from '../../components/blog-editor/blog-editor.screen';
 
 import { selectCurrentUser } from "../../redux/user/user.selectors";
 import { connect as connectRedux } from 'react-redux';
 
-export const DrawerNavigator1 = createDrawerNavigator(
-    {
-        SignIn: {
-            screen: SignInScreen,
-        },
-        SignUp: {
-            screen: SignUpScreen,
+export var DrawerNavigation = null;
+
+const Navigator = ( { currentUser } ) => {
+    var DrawerNavigator = null;
+    var commonNavs = {
+        BlogEditor: {
+            screen: BlogEditorScreen,
         },
         BlogList: {
             screen: BlogListScreen,
         },
-        BlogEditor: {
-            screen: BlogEditorScreen,
+        MyBlogs: {
+            screen: BlogListScreen,
         }
-    },
-    {
-        initialRouteName: 'BlogEditor',
-    }
-);
-
-export const StackNavigator1 = createAppContainer(
-    createStackNavigator(
-        {
-            Main: { screen: DrawerNavigator1 }
-        },
-        {
-            defaultNavigationOptions: ( { navigation } ) => ( {
-                title: "BlogOn!",
-            } ),
-
-        }
-    ) );
-
-const Navigator = ( { currentUser } ) => {
-    var DrawerNavigator = null;
+    };
     if ( currentUser === null ) {
         DrawerNavigator = createDrawerNavigator(
             {
@@ -56,15 +36,15 @@ const Navigator = ( { currentUser } ) => {
                 SignUp: {
                     screen: SignUpScreen,
                 },
-                BlogList: {
-                    screen: BlogListScreen,
-                },
-                BlogEditor: {
-                    screen: BlogEditorScreen,
-                }
+                ...commonNavs
+
             },
             {
                 initialRouteName: 'BlogList',
+                defaultNavigationOptions: ( { navigation } ) => {
+                    DrawerNavigation = navigation;
+                    return {};
+                }
             }
         );
 
@@ -74,15 +54,14 @@ const Navigator = ( { currentUser } ) => {
                 SignOut: {
                     screen: SignOutScreen,
                 },
-                BlogList: {
-                    screen: BlogListScreen,
-                },
-                BlogEditor: {
-                    screen: BlogEditorScreen,
-                }
+                ...commonNavs
             },
             {
-                initialRouteName: 'BlogList',
+                initialRouteName: 'BlogEditor',
+                defaultNavigationOptions: ( { navigation } ) => {
+                    DrawerNavigation = navigation;
+                    return {};
+                }
             }
         );
     }

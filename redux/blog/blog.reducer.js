@@ -1,9 +1,9 @@
 import { BlogActionTypes } from "./blog.types";
-import { BLOG_DATA } from '../../components/blog-list/blog-list.data';
 
 
 const INITIAL_STATE = {
-    blogList: BLOG_DATA
+    blogList: null,
+    isRefreshing: false
 };
 
 const blogReducer = ( state = INITIAL_STATE, action ) => {
@@ -11,7 +11,13 @@ const blogReducer = ( state = INITIAL_STATE, action ) => {
         case BlogActionTypes.BLOG_LIST_MULTIPLE:
             return {
                 ...state,
+                isRefreshing: false,
                 blogList: action.payload
+            };
+        case BlogActionTypes.BLOG_REFRESH_LISTS:
+            return {
+                ...state,
+                isRefreshing: action.payload
             };
         default:
             return state;
