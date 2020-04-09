@@ -6,7 +6,7 @@ const BlogListItem = ( { blog } ) => {
     return (
         <View>
             <Text>{ blog.title }</Text>
-            <Text>By { blog.author.displayName }</Text>
+            <Text>By { blog.author !== null ? blog.author.displayName : "Unknown" }</Text>
 
             <Image
                 style={ { width: '100%', height: 300, resizeMode: 'stretch' } }

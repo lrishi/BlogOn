@@ -18,7 +18,7 @@ class BlogEditor extends React.Component {
     saveBlog = async () => {
         const blog = {
             ...this.state.blog,
-            author: this.props.currentUser
+            author: firestore.doc( `users/${ this.props.currentUser.id }` )
         };
 
         if ( !BlogTemplate().validate( blog ) ) {

@@ -27,12 +27,26 @@ export const getBlogData = async () => {
     const snapshot = await firestore
         .collection( "blogs" ).orderBy( "ts_updated", "desc" )
         .limit( 10 ).get();
-    const snapShotData = () => {
+    const snapShotData = async () => {
         var tdata = [];
-        snapshot.forEach( ( fe ) => tdata.push( { ...fe.data(), id: fe.id } ) );
+        snapshot.forEach( ( fed ) => {
+            tdata.push( { ...fed.data(), id: fed.id } );
+        } );
+        for ( let i = 0; i < tdata.length; i++ ) {
+            fe = tdata[ i ];
+            let author = { displayName: "Unknown" };
+            if ( fe.author ) {
+                let res = await fe.author.get();
+                author = res.data();
+            } else {
+                author = { displayName: "Anonymous Author" };
+            }
+            tdata[ i ] = { ...tdata[ i ], author: author };
+        }
+        console.log( "TDATA ====>", tdata );
         return tdata;
     };
-    return snapShotData();
+    return await snapShotData();
 };
 
 export const createUserProfileDocument = async ( userAuth, additionalData ) => {
