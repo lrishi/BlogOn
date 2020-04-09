@@ -7,6 +7,7 @@ import SignUpScreen from '../../components/sign-up/sign-up.screen';
 import BlogListScreen from '../../components/blog-list/blog-list.screen';
 import SignInScreen from '../../components/sign-in/sign-in.screen';
 import SignOutScreen from '../../components/sign-out/sign-out.screen';
+import BlogEditorScreen from '../../components/blog-editor/blog-editor.component';
 
 import { selectCurrentUser } from "../../redux/user/user.selectors";
 import { connect as connectRedux } from 'react-redux';
@@ -21,10 +22,13 @@ export const DrawerNavigator1 = createDrawerNavigator(
         },
         BlogList: {
             screen: BlogListScreen,
+        },
+        BlogEditor: {
+            screen: BlogEditorScreen,
         }
     },
     {
-        initialRouteName: 'BlogList',
+        initialRouteName: 'BlogEditor',
     }
 );
 
@@ -54,6 +58,9 @@ const Navigator = ( { currentUser } ) => {
                 },
                 BlogList: {
                     screen: BlogListScreen,
+                },
+                BlogEditor: {
+                    screen: BlogEditorScreen,
                 }
             },
             {
@@ -69,6 +76,9 @@ const Navigator = ( { currentUser } ) => {
                 },
                 BlogList: {
                     screen: BlogListScreen,
+                },
+                BlogEditor: {
+                    screen: BlogEditorScreen,
                 }
             },
             {
