@@ -5,8 +5,8 @@ import { auth } from '../../firebase/firebase.utils';
 import './sign-in.styles';
 
 const INITIAL_STATE = {
-    email: '',
-    password: '',
+    email: 'lovelworks@gmail.com',
+    password: 'kishore11',
 };
 
 class SignIn extends React.Component {

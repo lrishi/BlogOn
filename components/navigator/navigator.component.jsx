@@ -5,14 +5,16 @@ import { createDrawerNavigator, DrawerActions } from 'react-navigation-drawer';
 import { createStackNavigator } from 'react-navigation-stack';
 import SignUpScreen from '../../components/sign-up/sign-up.screen';
 import BlogListScreen from '../../components/blog-list/blog-list.screen';
+import UserBlogListScreen from '../../components/blog-list/user-blog-list.screen';
+
 import SignInScreen from '../../components/sign-in/sign-in.screen';
 import SignOutScreen from '../../components/sign-out/sign-out.screen';
 import BlogEditorScreen from '../../components/blog-editor/blog-editor.screen';
 
 import { selectCurrentUser } from "../../redux/user/user.selectors";
 import { connect as connectRedux } from 'react-redux';
+import { setGlobalNavigationContext } from './navigator.exports';
 
-export var DrawerNavigation = null;
 
 const Navigator = ( { currentUser } ) => {
     var DrawerNavigator = null;
@@ -24,7 +26,7 @@ const Navigator = ( { currentUser } ) => {
             screen: BlogListScreen,
         },
         MyBlogs: {
-            screen: BlogListScreen,
+            screen: UserBlogListScreen,
         }
     };
     if ( currentUser === null ) {
@@ -42,7 +44,7 @@ const Navigator = ( { currentUser } ) => {
             {
                 initialRouteName: 'BlogList',
                 defaultNavigationOptions: ( { navigation } ) => {
-                    DrawerNavigation = navigation;
+                    setGlobalNavigationContext( navigation );
                     return {};
                 }
             }
@@ -59,7 +61,7 @@ const Navigator = ( { currentUser } ) => {
             {
                 initialRouteName: 'BlogEditor',
                 defaultNavigationOptions: ( { navigation } ) => {
-                    DrawerNavigation = navigation;
+                    setGlobalNavigationContext( navigation );
                     return {};
                 }
             }

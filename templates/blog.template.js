@@ -2,6 +2,7 @@
 export const BlogTemplate = () => (
     {
         template: {
+            'id': null,
             'title': null,
             'editor': null,
             'image': null,

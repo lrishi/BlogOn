@@ -5,7 +5,18 @@ export const listMultiple = ( item ) => ( {
     type: BlogActionTypes.BLOG_LIST_MULTIPLE,
     payload: item
 } );
+
+export const listUserMultiple = ( item ) => ( {
+    type: BlogActionTypes.BLOG_LIST_USER_MULTIPLE,
+    payload: item
+} );
+
 export const setRefreshing = ( item ) => ( {
     type: BlogActionTypes.BLOG_SET_REFRESHING,
+    payload: item
+} );
+
+export const editBlog = ( item ) => ( {
+    type: BlogActionTypes.BLOG_EDIT,
     payload: item
 } );

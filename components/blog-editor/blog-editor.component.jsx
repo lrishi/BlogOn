@@ -1,23 +1,21 @@
 import React from 'react';
 import { ScrollView, Image, Button, TextInput, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { BlogTemplate } from '../../templates/blog.template';
 import { connect as connectRedux } from 'react-redux';
 import { selectCurrentUser } from "../../redux/user/user.selectors";
-
+import { selectBlogEditable } from '../../redux/blog/blog.selectors';
 import firebase, { firestore } from "../../firebase/firebase.utils";
+import { editBlog } from '../../redux/blog/blog.actions';
+import { BlogTemplate } from '../../templates/blog.template';
 
 class BlogEditor extends React.Component {
     constructor( props ) {
         super( props );
-        this.state = {
-            blog: BlogTemplate().template,
-        };
     }
 
     saveBlog = async () => {
-        const blog = {
-            ...this.state.blog,
+        let blog = {
+            ...this.props.editableBlog,
             author: firestore.doc( `users/${ this.props.currentUser.id }` )
         };
 
@@ -25,11 +23,17 @@ class BlogEditor extends React.Component {
             alert( "Blog fields cannot be empty" );
             return;
         }
-
-        blog.ts_added = firebase.firestore.Timestamp.now();
+        if ( blog.ts_added == null ) {
+            blog.ts_added = firebase.firestore.Timestamp.now();
+        }
         blog.ts_updated = firebase.firestore.Timestamp.now();
         try {
-            await firestore.collection( "blogs" ).add( blog );
+            if ( blog.id == null ) {
+                await firestore.collection( "blogs" ).add( blog );
+            } else {
+                await firestore.collection( "blogs" ).doc( blog.id )
+                    .set( blog, { merge: true } );
+            }
             /* TODO: Redirect to view */
         } catch ( error ) {
             alert( error.message );
@@ -44,7 +48,7 @@ class BlogEditor extends React.Component {
             base64: true,
         } );
         if ( !image.cancelled ) {
-            this.setState( { ...this.state, blog: { ...this.state.blog, 'image': image.base64 } } );
+            this.props.editItem( { ...this.props.editableBlog, 'image': image.base64 } );
         }
     };
 
@@ -57,24 +61,33 @@ class BlogEditor extends React.Component {
             base64: true
         } );
         if ( !image.cancelled ) {
-            this.setState( { ...this.state, blog: { ...this.state.blog, 'image': image.base64 } } );
+            this.props.editItem( { ...this.props.editableBlog, 'image': image.base64 } );
         }
     };
 
     handleTextAddition = ( key, value ) => {
-        this.setState( { ...this.state, blog: { ...this.state.blog, [ key ]: value } } );
+        this.props.editItem( {
+            ...this.props.editableBlog,
+            [ key ]: value
+        } );
     };
 
     render () {
+        let blog = this.props.editableBlog;
+        if ( blog === null ) {
+            blog = BlogTemplate().template;
+        }
         return (
             <ScrollView>
-                <TextInput placeholder="Title" onChangeText={ ( text ) => this.handleTextAddition( 'title', text ) } />
+                <TextInput value={ blog.title }
+                    placeholder="Title"
+                    onChangeText={ ( text ) => this.handleTextAddition( 'title', text ) } />
                 {
-                    ( this.state.blog.image === null ) ?
+                    ( blog.image === null ) ?
                         ( <Text>No image selected</Text> ) :
                         ( <Image
                             style={ { width: '100%', height: 300, resizeMode: 'stretch' } }
-                            source={ { uri: `data:image/gif;base64,${ this.state.blog.image }` } }
+                            source={ { uri: `data:image/gif;base64,${ blog.image }` } }
                         /> )
                 }
                 <Button
@@ -84,7 +97,7 @@ class BlogEditor extends React.Component {
                     title="Select Image"
                     onPress={ this.selectImage } />
                 <TextInput
-                    value={ this.state.blog.editor }
+                    value={ blog.editor }
                     placeholder="Enter your blog post here"
                     onChangeText={ ( text ) => this.handleTextAddition( 'editor', text ) }
                     multiline={ true }
@@ -98,7 +111,13 @@ class BlogEditor extends React.Component {
         );
     }
 };
+
 const mapStateToProps = ( state ) => ( {
-    currentUser: selectCurrentUser( state )
+    currentUser: selectCurrentUser( state ),
+    editableBlog: selectBlogEditable( state )
 } );
-export default connectRedux( mapStateToProps )( BlogEditor );
+
+const mapDispatchToProps = dispatch => ( {
+    editItem: ( item ) => dispatch( editBlog( item ) ),
+} );
+export default connectRedux( mapStateToProps, mapDispatchToProps )( BlogEditor );

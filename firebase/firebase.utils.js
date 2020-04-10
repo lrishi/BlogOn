@@ -23,6 +23,25 @@ export const firestore = firebase.firestore();
 
 firebase.auth().setPersistence( firebase.auth.Auth.Persistence.LOCAL );
 
+export const deleteBlogItem = async ( currentUser, blogItem ) => {
+    const snapshot = firestore.collection( "blogs" ).doc( blogItem.id );
+    snapshot.get().then( ( doc ) => {
+        if ( doc.exists ) {
+            let blogPost = doc.data();
+            blogPost.author.get().then( ( res ) => {
+                if ( res.exists ) {
+                    if ( res.id == currentUser.id ) {
+                        console.log( "Deleting blog..." );
+                        snapshot.delete();
+                    }
+                }
+            } );
+
+        }
+    } );
+
+};
+
 export const getBlogData = async () => {
     const snapshot = await firestore
         .collection( "blogs" ).orderBy( "ts_updated", "desc" )
@@ -43,7 +62,42 @@ export const getBlogData = async () => {
             }
             tdata[ i ] = { ...tdata[ i ], author: author };
         }
-        console.log( "TDATA ====>", tdata );
+        return tdata;
+    };
+    return await snapShotData();
+};
+
+export const getUserBlogData = async ( currentUser ) => {
+    if ( currentUser === null ) {
+        alert( "You need to be logged in to perform this action." );
+        return null;
+    }
+    const userRef = firestore.doc( `users/${ currentUser.id }` );
+    if ( !userRef ) {
+        alert( "There are Issues with your sign in data. Please relogin!" );
+        return null;
+    }
+    const snapshot = await firestore
+        .collection( "blogs" )
+        .where( "author", '==', userRef )
+        .orderBy( "ts_updated", "desc" )
+        .limit( 10 ).get();
+    const snapShotData = async () => {
+        var tdata = [];
+        snapshot.forEach( ( fed ) => {
+            tdata.push( { ...fed.data(), id: fed.id } );
+        } );
+        for ( let i = 0; i < tdata.length; i++ ) {
+            fe = tdata[ i ];
+            let author = { displayName: "Unknown" };
+            if ( fe.author ) {
+                let res = await fe.author.get();
+                author = res.data();
+            } else {
+                author = { displayName: "Anonymous Author" };
+            }
+            tdata[ i ] = { ...tdata[ i ], author: author };
+        };
         return tdata;
     };
     return await snapShotData();

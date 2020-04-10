@@ -7,9 +7,17 @@ export const selectBlogList = createSelector(
     ( blog ) => blog.blogList
 );
 
-selectBlogIsRefreshing;
+export const selectUserBlogList = createSelector(
+    [ selectBlog ],
+    ( blog ) => blog.userBlogList
+);
 
 export const selectBlogIsRefreshing = createSelector(
     [ selectBlog ],
     ( blog ) => blog.isRefreshing
+);
+
+export const selectBlogEditable = createSelector(
+    [ selectBlog ],
+    ( blog ) => blog.editable
 );

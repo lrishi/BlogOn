@@ -2,6 +2,7 @@
   "expo": {
     "name": "BlogOn",
     "slug": "BlogOn",
+    "scheme": "blogon",
     "platforms": [
       "ios",
       "android",

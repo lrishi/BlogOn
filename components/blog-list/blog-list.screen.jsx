@@ -8,7 +8,7 @@ class BlogListScreen extends React.Component {
     };
 
     render () {
-        return ( <BlogList /> );
+        return ( <BlogList hasUser={ false } /> );
     };
 }
 
