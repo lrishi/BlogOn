@@ -9,7 +9,9 @@ import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 import { connect as connectRedux } from 'react-redux';
 import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from "./redux/user/user.selectors";
+import { selectIsLoading } from "./redux/blog/blog.selectors";
 import { Linking } from 'expo';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
@@ -19,6 +21,10 @@ class App extends React.Component {
     let data = Linking.parse( event.url );
     console.log( { redirectData: data } );
   };
+
+  constructor( props ) {
+    super( props );
+  }
 
   componentDidMount () {
     const { setCurrentUser } = this.props;
@@ -45,8 +51,12 @@ class App extends React.Component {
   }
 
   render () {
+    const { isLoading } = this.props;
     return (
       <SafeAreaView style={ { flex: 1 } }>
+        <Spinner
+          visible={ isLoading }
+        />
         <Navigator />
       </SafeAreaView>
     );
@@ -54,7 +64,8 @@ class App extends React.Component {
 };
 
 const mapStateToProps = ( state ) => ( {
-  currentUser: selectCurrentUser( state )
+  currentUser: selectCurrentUser( state ),
+  isLoading: selectIsLoading( state )
 } );
 
 const mapDispatchToProps = dispatch => ( {

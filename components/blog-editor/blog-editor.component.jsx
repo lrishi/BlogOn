@@ -6,7 +6,7 @@ import { selectCurrentUser } from "../../redux/user/user.selectors";
 import { selectBlogEditable } from '../../redux/blog/blog.selectors';
 import firebase, { firestore } from "../../firebase/firebase.utils";
 import { editBlog } from '../../redux/blog/blog.actions';
-import { BlogTemplate } from '../../templates/blog.template';
+import { BlogTemplate } from '../../redux/blog/blog.types';
 
 class BlogEditor extends React.Component {
     constructor( props ) {
@@ -45,6 +45,7 @@ class BlogEditor extends React.Component {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [ 16, 9 ],
+            quality: 0.5,
             base64: true,
         } );
         if ( !image.cancelled ) {
@@ -57,7 +58,7 @@ class BlogEditor extends React.Component {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [ 16, 9 ],
-            quality: 1,
+            quality: 0.5,
             base64: true
         } );
         if ( !image.cancelled ) {

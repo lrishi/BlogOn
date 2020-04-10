@@ -20,3 +20,8 @@ export const editBlog = ( item ) => ( {
     type: BlogActionTypes.BLOG_EDIT,
     payload: item
 } );
+
+export const viewBlog = ( item ) => ( {
+    type: BlogActionTypes.BLOG_VIEW,
+    payload: item
+} );

@@ -21,3 +21,13 @@ export const selectBlogEditable = createSelector(
     [ selectBlog ],
     ( blog ) => blog.editable
 );
+
+export const selectBlogViewable = createSelector(
+    [ selectBlog ],
+    ( blog ) => blog.viewable
+);
+
+export const selectIsLoading = createSelector(
+    [ selectBlog ],
+    ( blog ) => blog.isLoading
+);

@@ -1,11 +1,12 @@
 import { BlogActionTypes } from "./blog.types";
-import { BlogTemplate } from '../../templates/blog.template';
 
 const INITIAL_STATE = {
     blogList: null,
     userBlogList: null,
     isRefreshing: false,
-    editable: null
+    editable: null,
+    viewable: null,
+    isLoading: false
 };
 
 const blogReducer = ( state = INITIAL_STATE, action ) => {
@@ -31,6 +32,16 @@ const blogReducer = ( state = INITIAL_STATE, action ) => {
             return {
                 ...state,
                 editable: action.payload
+            };
+        case BlogActionTypes.BLOG_VIEW:
+            return {
+                ...state,
+                viewable: action.payload
+            };
+        case BlogActionTypes.BLOG_SET_ISLOADING:
+            return {
+                ...state,
+                isLoading: action.payload
             };
         default:
             return state;

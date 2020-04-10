@@ -4,9 +4,9 @@ import { connect as connectRedux } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faClock, faEdit, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 
-import { editBlog } from '../../redux/blog/blog.actions';
+import { editBlog, viewBlog } from '../../redux/blog/blog.actions';
 import { deleteBlogItem } from '../../firebase/firebase.utils';
-import { getGlobalNavigationContext } from '../navigator/navigator.exports';
+import { getGlobalNavigationContext, getGlobalStackNavigationContext } from '../navigator/navigator.exports';
 import styles from './blog-list-item.styles';
 
 class BlogListItem extends React.Component {
@@ -32,10 +32,16 @@ class BlogListItem extends React.Component {
         getGlobalNavigationContext().navigate( 'BlogEditor' );
     };
 
+    handleViewBlog = () => {
+        const { blog, viewBlogItem } = this.props;
+        viewBlogItem( blog );
+        getGlobalStackNavigationContext().navigate( 'BlogViewer' );
+    };
+
     render () {
         const { blog, hasUser = false } = this.props;
         return (
-            <TouchableOpacity style={ styles.blogListItemContainer }>
+            <TouchableOpacity style={ styles.blogListItemContainer } onPress={ this.handleViewBlog }>
 
                 <Image
                     style={ styles.blogListThumbnail }
@@ -81,6 +87,7 @@ class BlogListItem extends React.Component {
 }
 const mapDispatchToProps = dispatch => ( {
     editBlogItem: ( item ) => dispatch( editBlog( item ) ),
+    viewBlogItem: ( item ) => dispatch( viewBlog( item ) )
 } );
 
 export default connectRedux( null, mapDispatchToProps )( BlogListItem );
