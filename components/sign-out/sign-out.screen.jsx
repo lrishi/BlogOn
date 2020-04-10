@@ -8,6 +8,11 @@ class SignOutScreen extends React.Component {
         drawerLabel: 'Sign Out',
     };
 
+    constructor( props ) {
+        super( props );
+        this.props.navigation.setParams( { title: "We'll miss you!" } );
+    }
+
     render () {
         return ( <SignOut /> );
 

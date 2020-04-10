@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-native';
+import { Text } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator, DrawerActions } from 'react-navigation-drawer';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -11,12 +11,17 @@ import SignInScreen from '../../components/sign-in/sign-in.screen';
 import SignOutScreen from '../../components/sign-out/sign-out.screen';
 import BlogEditorScreen from '../../components/blog-editor/blog-editor.screen';
 
-import { selectCurrentUser } from "../../redux/user/user.selectors";
+import { selectCurrentUser, selectCurrentTitle } from "../../redux/user/user.selectors";
+import { setCurrentTitle } from "../../redux/user/user.actions";
+
 import { connect as connectRedux } from 'react-redux';
-import { setGlobalNavigationContext } from './navigator.exports';
+import { setGlobalNavigationContext, setGlobalStackNavigationContext, getGlobalStackNavigationContext } from './navigator.exports';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faClock, faEdit, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 
 
-const Navigator = ( { currentUser } ) => {
+const Navigator = ( { currentUser, currentTitle, updateCurrentTitle } ) => {
+    let currTitle = "BlogOn!";
     var DrawerNavigator = null;
     var commonNavs = {
         BlogEditor: {
@@ -42,11 +47,17 @@ const Navigator = ( { currentUser } ) => {
 
             },
             {
-                initialRouteName: 'BlogList',
+                initialRouteName: 'BlogEditor',
                 defaultNavigationOptions: ( { navigation } ) => {
                     setGlobalNavigationContext( navigation );
-                    return {};
-                }
+                    if ( navigation.isFocused() ) {
+                        let a = navigation.getParam( "title", "BlogOn" );
+                        if ( a != currTitle ) {
+                            currTitle = a;
+                            getGlobalStackNavigationContext().closeDrawer();
+                        }
+                    }
+                },
             }
         );
 
@@ -62,28 +73,49 @@ const Navigator = ( { currentUser } ) => {
                 initialRouteName: 'BlogEditor',
                 defaultNavigationOptions: ( { navigation } ) => {
                     setGlobalNavigationContext( navigation );
-                    return {};
-                }
+                    if ( navigation.isFocused() ) {
+                        let a = navigation.getParam( "title", "BlogOn" );
+                        if ( a != currTitle ) {
+                            currTitle = a;
+                            getGlobalStackNavigationContext().closeDrawer();
+                        }
+                    }
+                },
             }
         );
     }
     const StackNavigator = createAppContainer(
         createStackNavigator(
             {
-                Main: { screen: DrawerNavigator }
+                Main: DrawerNavigator
             },
             {
-                defaultNavigationOptions: ( { navigation } ) => ( {
-                    title: "BlogOn!",
-                } ),
+                initialRouteName: 'Main',
+                defaultNavigationOptions: ( { navigation } ) => {
+                    setGlobalStackNavigationContext( navigation );
+                    return {
+                        headerMode: 'screen',
+                        headerStyle: {
+                            backgroundColor: "indigo",
 
+                        },
+                        headerTitleStyle: {
+                            color: 'white'
+                        },
+                        title: ( <Text style={ { fontSize: 25 } }>{ currTitle }  <FontAwesomeIcon size={ 24 } icon={ faEdit } color={ 'white' } /> </Text > ),
+                    };
+                },
+                headerMode: 'screen',
             }
         ) );
     return ( <StackNavigator /> );
 };
 
 const mapStateToProps = ( state ) => ( {
-    currentUser: selectCurrentUser( state )
+    currentUser: selectCurrentUser( state ),
+    currentTitle: selectCurrentTitle( state )
 } );
-
-export default connectRedux( mapStateToProps )( Navigator );
+const mapDispatchToProps = ( dispatch ) => ( {
+    updateCurrentTitle: ( item ) => dispatch( setCurrentTitle( item ) )
+} );
+export default connectRedux( mapStateToProps, mapDispatchToProps )( Navigator );

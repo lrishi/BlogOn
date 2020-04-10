@@ -8,6 +8,11 @@ class SignUpScreen extends React.Component {
         drawerLabel: 'Sign Up',
     };
 
+    constructor( props ) {
+        super( props );
+        this.props.navigation.setParams( { title: 'Sign Up' } );
+    }
+
     render () {
         return ( <SignUp /> );
 

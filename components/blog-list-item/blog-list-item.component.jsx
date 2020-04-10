@@ -1,9 +1,13 @@
 import React from 'react';
-import { View, Text, Image, Button, Alert } from 'react-native';
+import { TouchableOpacity, View, Text, Image, Button, Alert } from 'react-native';
+import { connect as connectRedux } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faClock, faEdit, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
+
+import { editBlog } from '../../redux/blog/blog.actions';
 import { deleteBlogItem } from '../../firebase/firebase.utils';
 import { getGlobalNavigationContext } from '../navigator/navigator.exports';
-import { connect as connectRedux } from 'react-redux';
-import { editBlog } from '../../redux/blog/blog.actions';
+import styles from './blog-list-item.styles';
 
 class BlogListItem extends React.Component {
     constructor( props ) {
@@ -21,37 +25,56 @@ class BlogListItem extends React.Component {
             ]
         );
     };
+
     editItem = () => {
         const { blog, editBlogItem } = this.props;
         editBlogItem( blog );
         getGlobalNavigationContext().navigate( 'BlogEditor' );
     };
+
     render () {
         const { blog, hasUser = false } = this.props;
         return (
-            <View>
-                <Text>{ blog.title }</Text>
-                <Text>By { blog.author !== null ? blog.author.displayName : "Unknown" }</Text>
+            <TouchableOpacity style={ styles.blogListItemContainer }>
 
                 <Image
-                    style={ { width: '100%', height: 300, resizeMode: 'stretch' } }
+                    style={ styles.blogListThumbnail }
                     source={ { uri: `data:image/gif;base64,${ blog.image }` } }
                 />
-                <Text>Added on { blog.ts_added.toDate().toString() }, Modified on { blog.ts_updated.toDate().toString() }</Text>
-                <Text>{ blog.editor }</Text>
-                {
-                    hasUser ?
-                        (
-                            <View>
-                                <Button title="Edit" onPress={ this.editItem } />
-                                <Button title="Delete" onPress={ this.deleteItem } />
-                            </View>
-                        )
-                        :
-                        ( <View></View> )
-                }
+                <View style={ styles.blogListTextWrapper }>
+                    <Text numberOfLines={ 1 } style={ styles.blogListTitle } >{ blog.title }</Text>
 
-            </View>
+                    <Text style={ styles.blogMetaData }>
+                        <FontAwesomeIcon icon={ faEdit } size={ 12 } color={ 'grey' } /> { blog.author !== null ? blog.author.displayName.substring( 0, 20 ) : "Unknown" } { '\n' }
+                        <FontAwesomeIcon icon={ faClock } size={ 12 } color={ 'grey' } /> { blog.ts_added.toDate().toDateString().substring( 0, 20 ) }
+                    </Text>
+
+                    <Text numberOfLines={ 1 } style={ styles.blogExcerpt }>
+                        { `${ blog.editor.substring( 0, 24 ) }` }
+                    </Text>
+                    {
+                        hasUser ?
+                            (
+                                <View style={ styles.blogActionWrapper } >
+                                    <TouchableOpacity style={ styles.blogActionButton }
+                                        onPress={ this.editItem } >
+                                        <FontAwesomeIcon icon={ faEdit } />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={ {
+                                            ...styles.blogActionButton,
+                                            ...styles.deleteButton
+                                        } }
+                                        onPress={ this.deleteItem } >
+                                        <FontAwesomeIcon icon={ faTimesCircle } color={ 'white' } />
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                            :
+                            ( <View></View> )
+                    }
+                </View>
+            </TouchableOpacity>
 
         );
     };

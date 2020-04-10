@@ -81,6 +81,7 @@ class BlogEditor extends React.Component {
             <ScrollView>
                 <TextInput value={ blog.title }
                     placeholder="Title"
+                    returnKeyType={ "next" }
                     onChangeText={ ( text ) => this.handleTextAddition( 'title', text ) } />
                 {
                     ( blog.image === null ) ?
@@ -101,6 +102,7 @@ class BlogEditor extends React.Component {
                     placeholder="Enter your blog post here"
                     onChangeText={ ( text ) => this.handleTextAddition( 'editor', text ) }
                     multiline={ true }
+                    returnKeyType={ "next" }
                     style={ { height: 200 } }
 
                 />

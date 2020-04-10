@@ -44,7 +44,7 @@ export const deleteBlogItem = async ( currentUser, blogItem ) => {
 
 export const getBlogData = async () => {
     const snapshot = await firestore
-        .collection( "blogs" ).orderBy( "ts_updated", "desc" )
+        .collection( "blogs" ).orderBy( "ts_added", "desc" )
         .limit( 10 ).get();
     const snapShotData = async () => {
         var tdata = [];
@@ -80,7 +80,7 @@ export const getUserBlogData = async ( currentUser ) => {
     const snapshot = await firestore
         .collection( "blogs" )
         .where( "author", '==', userRef )
-        .orderBy( "ts_updated", "desc" )
+        .orderBy( "ts_added", "desc" )
         .limit( 10 ).get();
     const snapShotData = async () => {
         var tdata = [];

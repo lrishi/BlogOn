@@ -12,6 +12,7 @@ class UserBlogListScreen extends React.Component {
 
     constructor( props ) {
         super( props );
+        this.props.navigation.setParams( { title: 'My Blogs' } );
     }
 
     render () {

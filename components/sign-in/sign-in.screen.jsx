@@ -8,6 +8,11 @@ class SignInScreen extends React.Component {
         drawerLabel: 'Sign In',
     };
 
+    constructor( props ) {
+        super( props );
+        this.props.navigation.setParams( { title: 'User Login' } );
+    }
+
     render () {
         return ( <SignIn /> );
     };

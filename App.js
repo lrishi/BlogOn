@@ -9,12 +9,20 @@ import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 import { connect as connectRedux } from 'react-redux';
 import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from "./redux/user/user.selectors";
+import { Linking } from 'expo';
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
 
+  /* blogon:///post/?postid=abc123 */
+  handleDeepLink = event => {
+    let data = Linking.parse( event.url );
+    console.log( { redirectData: data } );
+  };
+
   componentDidMount () {
     const { setCurrentUser } = this.props;
+    Linking.addEventListener( 'url', this.handleDeepLink );
     this.unsubscribeFromAuth = auth.onAuthStateChanged( async userAuth => {
       if ( userAuth ) {
         const userRef = await createUserProfileDocument( userAuth );
@@ -32,8 +40,10 @@ class App extends React.Component {
   }
 
   componentWillUnmount () {
+    Linking.removeEventListener( 'url', this.handleDeepLink );
     this.unsubscribeFromAuth();
   }
+
   render () {
     return (
       <SafeAreaView style={ { flex: 1 } }>
