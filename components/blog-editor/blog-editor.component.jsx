@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Image, Button, TextInput, Text } from 'react-native';
+import { ScrollView, Image, Button, TextInput, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { connect as connectRedux } from 'react-redux';
 import { selectCurrentUser } from "../../redux/user/user.selectors";
@@ -7,6 +7,23 @@ import { selectBlogEditable } from '../../redux/blog/blog.selectors';
 import firebase, { firestore } from "../../firebase/firebase.utils";
 import { editBlog } from '../../redux/blog/blog.actions';
 import { BlogTemplate } from '../../redux/blog/blog.types';
+
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import {
+    faCamera as cameraIcon,
+    faImages as galleryIcon,
+    faUpload as publishIcon,
+    faBlog as newBlog,
+} from '@fortawesome/free-solid-svg-icons';
+
+
+import styles from './blog-editor.styles';
+
+import {
+    DecoratedTextInput,
+    DecoratedButtonSecondary,
+} from '../../components/decorated-natives/decorated-natives.components';
+
 
 class BlogEditor extends React.Component {
     constructor( props ) {
@@ -44,7 +61,7 @@ class BlogEditor extends React.Component {
         const image = await ImagePicker.launchCameraAsync( {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [ 16, 9 ],
+            aspect: [ 4, 3 ],
             quality: 0.5,
             base64: true,
         } );
@@ -79,36 +96,44 @@ class BlogEditor extends React.Component {
             blog = BlogTemplate().template;
         }
         return (
-            <ScrollView>
-                <TextInput value={ blog.title }
+            <ScrollView contentContainerStyle={ styles.container }>
+                <DecoratedTextInput
+                    style={ styles.input }
+                    value={ blog.title }
                     placeholder="Title"
                     returnKeyType={ "next" }
                     onChangeText={ ( text ) => this.handleTextAddition( 'title', text ) } />
                 {
-                    ( blog.image === null ) ?
-                        ( <Text>No image selected</Text> ) :
+                    ( blog.image === null || blog.image === undefined ) ?
+                        ( <Text style={ styles.noImageMessage }>No image selected</Text> ) :
                         ( <Image
-                            style={ { width: '100%', height: 300, resizeMode: 'stretch' } }
+                            style={ styles.coverImage }
                             source={ { uri: `data:image/gif;base64,${ blog.image }` } }
                         /> )
                 }
-                <Button
-                    title="Take Image"
-                    onPress={ this.takePicture } />
-                <Button
-                    title="Select Image"
-                    onPress={ this.selectImage } />
-                <TextInput
+                <View style={ styles.imageButtonHolder }>
+                    <DecoratedButtonSecondary
+                        style={ styles.imageButton }
+                        title={ <FontAwesomeIcon icon={ galleryIcon } size={ 30 } color={ 'black' } /> }
+                        onPress={ this.selectImage } />
+                    <DecoratedButtonSecondary
+                        style={ styles.imageButton }
+                        title={ <FontAwesomeIcon icon={ cameraIcon } size={ 30 } color={ 'black' } /> }
+                        onPress={ this.takePicture } />
+                </View>
+                <DecoratedTextInput
+                    contextMenuHidden={ false }
                     value={ blog.editor }
                     placeholder="Enter your blog post here"
                     onChangeText={ ( text ) => this.handleTextAddition( 'editor', text ) }
                     multiline={ true }
                     returnKeyType={ "next" }
-                    style={ { height: 200 } }
+                    style={ styles.detailedEditor }
 
                 />
-                <Button
-                    title="Save"
+                <DecoratedButtonSecondary
+                    style={ styles.publishButton }
+                    title={ <FontAwesomeIcon icon={ publishIcon } size={ 30 } color={ 'black' } /> }
                     onPress={ this.saveBlog } />
             </ScrollView >
         );

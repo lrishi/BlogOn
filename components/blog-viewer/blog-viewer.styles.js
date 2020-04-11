@@ -4,13 +4,12 @@ import { FontSizeLarge } from '../../themes/basic.theme';
 
 export default StyleSheet.create( {
     container: {
-        height: '100%',
+        width: '100%',
+        minHeight: '100%',
         backgroundColor: 'white'
     },
     coverImage: {
-        minHeight: 300,
-        maxHeight: 500,
-        height: '35%',
+        height: 300,
         width: '100%',
         resizeMode: 'cover',
     },
@@ -30,6 +29,8 @@ export default StyleSheet.create( {
     },
     blogText: {
         fontSize: FontSizeLarge,
-        padding: 20
+        padding: 20,
+        paddingBottom: 50,
+        textAlign: "justify",
     }
 } );
