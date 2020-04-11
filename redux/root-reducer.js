@@ -5,7 +5,7 @@ import userReducer from './user/user.reducer';
 import blogReducer from './blog/blog.reducer';
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 
-AsyncStorage.clear();
+// AsyncStorage.clear();
 
 const persistConfig = {
     key: 'root',

@@ -18,9 +18,12 @@ class App extends React.Component {
   unsubscribeFromAuth = null;
 
   /* blogon:///post/?postid=abc123 */
-  handleDeepLink = event => {
-    let data = Linking.parse( event.url );
-    console.log( { redirectData: data } );
+  handleDeepLink = ( { url } ) => {
+    let { path, queryParams } = Linking.parse( url );
+    if ( path === null || path === undefined ) {
+      return;
+    }
+    alert( path + "===" + JSON.stringify( queryParams ) );
   };
 
   constructor( props ) {
@@ -29,7 +32,12 @@ class App extends React.Component {
 
   componentDidMount () {
     const { setCurrentUser, notifyIsLoading } = this.props;
-    Linking.addEventListener( 'url', this.handleDeepLink );
+
+    Linking.addEventListener( 'post/pub', this.handleDeepLink );
+    Linking.getInitialURL().then( url => {
+      const func = async () => this.handleDeepLink( { url: url } );
+      func();
+    } );
     this.unsubscribeFromAuth = auth.onAuthStateChanged( async userAuth => {
       if ( userAuth ) {
         try {
@@ -53,7 +61,7 @@ class App extends React.Component {
   }
 
   componentWillUnmount () {
-    Linking.removeEventListener( 'url', this.handleDeepLink );
+    Linking.removeEventListener( 'post/pub', this.handleDeepLink );
     this.unsubscribeFromAuth();
   }
 

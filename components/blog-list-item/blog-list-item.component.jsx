@@ -59,7 +59,7 @@ class BlogListItem extends React.Component {
             await Share.share(
                 {
                     message:
-                        "Checkout my blog '" + blog.title + "' on BlogOn!. Click here: blogon://post/" + blog.id,
+                        "Checkout my blog '" + blog.title + "' on BlogOn!. Click here: http://blogs.blogon.com/post/pub?id=" + blog.id,
                 },
                 {
                     title: 'Sharing post: ' + blog.title,

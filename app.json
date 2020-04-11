@@ -27,7 +27,23 @@
     },
     "android": {
       "package": "com.lovelrishi.blogon",
-      "versionCode": 1
+      "versionCode": 1,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "http",
+              "host": "*.blogon.com",
+              "pathPrefix": "post/pub"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
     }
   }
 }
