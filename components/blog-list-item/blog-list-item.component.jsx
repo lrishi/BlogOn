@@ -1,12 +1,15 @@
 import React from 'react';
-import { TouchableOpacity, View, Text, Image, Button, Alert } from 'react-native';
+import { Share, TouchableOpacity, View, Text, Image, Alert } from 'react-native';
 import { connect as connectRedux } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faClock, faEdit, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
+import { faShareSquare, faClock, faEdit, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 import { setIsLoading } from '../../redux/blog/blog.actions';
 import { editBlog, viewBlog } from '../../redux/blog/blog.actions';
 import { deleteBlogItem } from '../../firebase/firebase.utils';
-import { getGlobalNavigationContext, getGlobalStackNavigationContext } from '../navigator/navigator.exports';
+import { getGlobalStackNavigationContext } from '../navigator/navigator.exports';
+
+import { DecoratedButtonSecondary } from '../../components/decorated-natives/decorated-natives.components';
+
 import styles from './blog-list-item.styles';
 
 class BlogListItem extends React.Component {
@@ -48,6 +51,23 @@ class BlogListItem extends React.Component {
         const { blog, viewBlogItem } = this.props;
         viewBlogItem( blog );
         getGlobalStackNavigationContext().navigate( 'BlogViewer' );
+    };
+
+    shareItem = async () => {
+        const { blog } = this.props;
+        try {
+            await Share.share(
+                {
+                    message:
+                        "Checkout my blog '" + blog.title + "' on BlogOn!. Click here: blogon://post/" + blog.id,
+                },
+                {
+                    title: 'Sharing post: ' + blog.title,
+                }
+            );
+        } catch ( error ) {
+            alert( error.message );
+        }
     };
 
     render () {
@@ -92,7 +112,15 @@ class BlogListItem extends React.Component {
                                 </View>
                             )
                             :
-                            ( <View></View> )
+                            (
+                                <View style={ styles.blogActionWrapper }>
+                                    <DecoratedButtonSecondary
+                                        style={ styles.shareButton }
+                                        title={ <FontAwesomeIcon icon={ faShareSquare } color={ 'black' } size={ 20 } /> }
+                                        onPress={ this.shareItem }
+                                    />
+                                </View>
+                            )
                     }
                 </View>
             </TouchableOpacity>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Image, Button, TextInput, Text, View } from 'react-native';
+import { BackHandler, Alert, ScrollView, Image, Button, TextInput, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { connect as connectRedux } from 'react-redux';
 import { selectCurrentUser } from "../../redux/user/user.selectors";
@@ -15,7 +15,6 @@ import {
     faCamera as cameraIcon,
     faImages as galleryIcon,
     faUpload as publishIcon,
-    faBlog as newBlog,
 } from '@fortawesome/free-solid-svg-icons';
 
 
@@ -101,6 +100,45 @@ class BlogEditor extends React.Component {
             [ key ]: value
         } );
     };
+
+    backButtonPressEventListener = () => {
+
+        const { editItem, editableBlog } = this.props;
+        if ( editableBlog !== undefined &&
+            editableBlog !== null ) {
+            if ( !editableBlog.hasOwnProperty( 'image' ) ) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        Alert.alert(
+            'All unsaved changes will be lost',
+            'Discard changes and exit?',
+            [
+                {
+                    text: 'NO',
+                    onPress: () => { }
+                },
+                {
+                    text: 'YES',
+                    onPress: async () => {
+                        editItem( {} );
+                        getGlobalNavigationContext().goBack( null );
+                    }
+                },
+            ]
+        );
+        return true;
+    };
+
+    componentDidMount () {
+        BackHandler.addEventListener( 'hardwareBackPress', this.backButtonPressEventListener );
+    }
+
+    componentWillUnmount () {
+        BackHandler.removeEventListener( 'hardwareBackPress', this.backButtonPressEventListener );
+    }
 
     render () {
         let blog = this.props.editableBlog;

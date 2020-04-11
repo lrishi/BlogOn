@@ -60,5 +60,10 @@ export default StyleSheet.create( {
         backgroundColor: 'red',
         color: 'white',
     },
-
+    shareButton: {
+        paddingTop: 5,
+        paddingBottom: 5,
+        paddingLeft: 10,
+        paddingRight: 10
+    }
 } );
