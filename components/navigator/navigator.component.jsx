@@ -1,8 +1,5 @@
 /* Libraries */
 import React from 'react';
-import { Text } from 'react-native';
-import { faEdit } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
@@ -114,7 +111,7 @@ const Navigator = ( { currentUser } ) => {
                         headerTitleStyle: {
                             color: 'white'
                         },
-                        title: ( <Text style={ { fontSize: 25 } }>{ currTitle }  <FontAwesomeIcon size={ 24 } icon={ faEdit } color={ 'white' } /> </Text > ),
+                        title: currTitle,
                     };
                 },
                 headerMode: 'screen',

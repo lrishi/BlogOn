@@ -41,7 +41,10 @@ class BlogListItem extends React.Component {
     render () {
         const { blog, hasUser = false } = this.props;
         return (
-            <TouchableOpacity style={ styles.blogListItemContainer } onPress={ this.handleViewBlog }>
+            <TouchableOpacity
+                activeOpacity={ 0.75 }
+                style={ styles.blogListItemContainer }
+                onPress={ this.handleViewBlog }>
 
                 <Image
                     style={ styles.blogListThumbnail }

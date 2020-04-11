@@ -25,3 +25,9 @@ export const viewBlog = ( item ) => ( {
     type: BlogActionTypes.BLOG_VIEW,
     payload: item
 } );
+
+export const setIsLoading = ( item ) => ( {
+    type: BlogActionTypes.BLOG_SET_ISLOADING,
+    payload: item
+} );
+

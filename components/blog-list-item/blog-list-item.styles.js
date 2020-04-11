@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { withOrientation } from 'react-navigation';
 
 export default StyleSheet.create( {
     blogListItemContainer: {

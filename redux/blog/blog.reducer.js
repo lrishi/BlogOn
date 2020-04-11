@@ -6,7 +6,7 @@ const INITIAL_STATE = {
     isRefreshing: false,
     editable: null,
     viewable: null,
-    isLoading: false
+    isLoading: 0
 };
 
 const blogReducer = ( state = INITIAL_STATE, action ) => {
@@ -39,9 +39,16 @@ const blogReducer = ( state = INITIAL_STATE, action ) => {
                 viewable: action.payload
             };
         case BlogActionTypes.BLOG_SET_ISLOADING:
+            let ilc = state.isLoading;
+            if ( action.payload ) {
+                ilc++;
+            } else {
+                ilc--;
+            }
+            if ( ilc < 0 ) ilc = 0;
             return {
                 ...state,
-                isLoading: action.payload
+                isLoading: ilc
             };
         default:
             return state;

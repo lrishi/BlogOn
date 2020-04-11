@@ -12,6 +12,7 @@ import { selectCurrentUser } from "./redux/user/user.selectors";
 import { selectIsLoading } from "./redux/blog/blog.selectors";
 import { Linking } from 'expo';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { setIsLoading } from './redux/blog/blog.actions';
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
@@ -27,7 +28,7 @@ class App extends React.Component {
   }
 
   componentDidMount () {
-    const { setCurrentUser } = this.props;
+    const { setCurrentUser, notifyIsLoading } = this.props;
     Linking.addEventListener( 'url', this.handleDeepLink );
     this.unsubscribeFromAuth = auth.onAuthStateChanged( async userAuth => {
       if ( userAuth ) {
@@ -39,6 +40,7 @@ class App extends React.Component {
           }
           );
         } );
+        setTimeout( () => notifyIsLoading( false ), 2000 );
       } else {
         setCurrentUser( null );
       }
@@ -55,7 +57,7 @@ class App extends React.Component {
     return (
       <SafeAreaView style={ { flex: 1 } }>
         <Spinner
-          visible={ isLoading }
+          visible={ isLoading > 0 ? true : false }
         />
         <Navigator />
       </SafeAreaView>
@@ -69,7 +71,8 @@ const mapStateToProps = ( state ) => ( {
 } );
 
 const mapDispatchToProps = dispatch => ( {
-  setCurrentUser: user => dispatch( setCurrentUser( user ) )
+  setCurrentUser: user => dispatch( setCurrentUser( user ) ),
+  notifyIsLoading: ( item ) => dispatch( setIsLoading( item ) ),
 } );
 
 const ReduxApp = connectRedux( mapStateToProps, mapDispatchToProps )( App );
