@@ -41,7 +41,7 @@ class BlogListItem extends React.Component {
     editItem = () => {
         const { blog, editBlogItem } = this.props;
         editBlogItem( blog );
-        getGlobalNavigationContext().navigate( 'BlogEditor' );
+        getGlobalStackNavigationContext().navigate( 'BlogEditor' );
     };
 
     handleViewBlog = () => {

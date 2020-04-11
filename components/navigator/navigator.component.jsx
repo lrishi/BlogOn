@@ -42,7 +42,7 @@ const Navigator = ( { currentUser } ) => {
         },
         MyBlogs: {
             screen: UserBlogListScreen,
-        }
+        },
     };
     if ( currentUser === null ) {
         DrawerNavigator = createDrawerNavigator(

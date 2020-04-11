@@ -8,7 +8,7 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
-    faPlus as newBlog,
+    faPen as newBlog,
 } from '@fortawesome/free-solid-svg-icons';
 
 
@@ -21,7 +21,7 @@ class BlogEditorScreen extends React.Component {
     constructor( props ) {
         super( props );
         this.props.navigation.setParams( {
-            title: ( <Text style={ { fontSize: 22 } }> <FontAwesomeIcon size={ 18 } icon={ newBlog } color={ 'white' } />  New Post</Text > )
+            title: ( <Text style={ { fontSize: 22 } }> <FontAwesomeIcon size={ 18 } icon={ newBlog } color={ 'white' } />  Blog Post</Text > )
         } );
     }
 
