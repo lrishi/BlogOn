@@ -7,6 +7,8 @@ import { selectBlogEditable } from '../../redux/blog/blog.selectors';
 import firebase, { firestore } from "../../firebase/firebase.utils";
 import { editBlog } from '../../redux/blog/blog.actions';
 import { BlogTemplate } from '../../redux/blog/blog.types';
+import { setIsLoading } from '../../redux/blog/blog.actions';
+import { getGlobalNavigationContext, getGlobalStackNavigationContext } from '../../components/navigator/navigator.exports';
 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
@@ -31,6 +33,9 @@ class BlogEditor extends React.Component {
     }
 
     saveBlog = async () => {
+        const { notifyIsLoading, editItem } = this.props;
+        notifyIsLoading( true );
+
         let blog = {
             ...this.props.editableBlog,
             author: firestore.doc( `users/${ this.props.currentUser.id }` )
@@ -38,11 +43,14 @@ class BlogEditor extends React.Component {
 
         if ( !BlogTemplate().validate( blog ) ) {
             alert( "Blog fields cannot be empty" );
+            notifyIsLoading( false );
             return;
         }
+
         if ( blog.ts_added == null ) {
             blog.ts_added = firebase.firestore.Timestamp.now();
         }
+
         blog.ts_updated = firebase.firestore.Timestamp.now();
         try {
             if ( blog.id == null ) {
@@ -51,9 +59,13 @@ class BlogEditor extends React.Component {
                 await firestore.collection( "blogs" ).doc( blog.id )
                     .set( blog, { merge: true } );
             }
-            /* TODO: Redirect to view */
+            editItem( {} );
+            getGlobalStackNavigationContext().pop();
+            getGlobalNavigationContext().navigate( "MyBlogs", { needsRefresh: true } );
+            setTimeout( () => notifyIsLoading( false ), 2000 );
         } catch ( error ) {
             alert( error.message );
+            setTimeout( () => notifyIsLoading( false ), 1000 );
         }
     };
 
@@ -74,7 +86,7 @@ class BlogEditor extends React.Component {
         const image = await ImagePicker.launchImageLibraryAsync( {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [ 16, 9 ],
+            aspect: [ 4, 3 ],
             quality: 0.5,
             base64: true
         } );
@@ -147,5 +159,6 @@ const mapStateToProps = ( state ) => ( {
 
 const mapDispatchToProps = dispatch => ( {
     editItem: ( item ) => dispatch( editBlog( item ) ),
+    notifyIsLoading: ( item ) => dispatch( setIsLoading( item ) ),
 } );
 export default connectRedux( mapStateToProps, mapDispatchToProps )( BlogEditor );

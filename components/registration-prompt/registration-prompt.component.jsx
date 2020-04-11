@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Text, Button } from 'react-native';
+import { ScrollView } from 'react-native';
 import { getGlobalNavigationContext } from '../../components/navigator/navigator.exports';
 
 import {

@@ -25,21 +25,19 @@ firebase.auth().setPersistence( firebase.auth.Auth.Persistence.LOCAL );
 
 export const deleteBlogItem = async ( currentUser, blogItem ) => {
     const snapshot = firestore.collection( "blogs" ).doc( blogItem.id );
-    snapshot.get().then( ( doc ) => {
+    await snapshot.get().then( async ( doc ) => {
         if ( doc.exists ) {
             let blogPost = doc.data();
-            blogPost.author.get().then( ( res ) => {
+            await blogPost.author.get().then( async ( res ) => {
                 if ( res.exists ) {
                     if ( res.id == currentUser.id ) {
                         console.log( "Deleting blog..." );
-                        snapshot.delete();
+                        await snapshot.delete();
                     }
                 }
             } );
-
         }
     } );
-
 };
 
 export const getBlogData = async () => {

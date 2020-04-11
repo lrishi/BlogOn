@@ -3,7 +3,7 @@ import { TouchableOpacity, View, Text, Image, Button, Alert } from 'react-native
 import { connect as connectRedux } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faClock, faEdit, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
-
+import { setIsLoading } from '../../redux/blog/blog.actions';
 import { editBlog, viewBlog } from '../../redux/blog/blog.actions';
 import { deleteBlogItem } from '../../firebase/firebase.utils';
 import { getGlobalNavigationContext, getGlobalStackNavigationContext } from '../navigator/navigator.exports';
@@ -15,13 +15,25 @@ class BlogListItem extends React.Component {
     }
 
     deleteItem = async () => {
-        const { currentUser, blog } = this.props;
+
+        const { currentUser, blog, notifyIsLoading, refreshCallBack } = this.props;
         Alert.alert(
             'Warning! Irreversible action!',
             'Are you sure you want to delete this post?',
             [
-                { text: 'NO', onPress: () => { } },
-                { text: 'YES', onPress: async () => await deleteBlogItem( currentUser, blog ) },
+                {
+                    text: 'NO',
+                    onPress: () => { setTimeout( () => notifyIsLoading( false ), 1000 ); }
+                },
+                {
+                    text: 'YES',
+                    onPress: async () => {
+                        notifyIsLoading( true );
+                        await deleteBlogItem( currentUser, blog ).then( () => {
+                            refreshCallBack();
+                        } );
+                    }
+                },
             ]
         );
     };
@@ -90,7 +102,8 @@ class BlogListItem extends React.Component {
 }
 const mapDispatchToProps = dispatch => ( {
     editBlogItem: ( item ) => dispatch( editBlog( item ) ),
-    viewBlogItem: ( item ) => dispatch( viewBlog( item ) )
+    viewBlogItem: ( item ) => dispatch( viewBlog( item ) ),
+    notifyIsLoading: ( item ) => dispatch( setIsLoading( item ) ),
 } );
 
 export default connectRedux( null, mapDispatchToProps )( BlogListItem );

@@ -7,6 +7,8 @@ import { listMultiple, listUserMultiple, setRefreshing } from '../../redux/blog/
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { getBlogData, getUserBlogData } from '../../firebase/firebase.utils';
 import { createStructuredSelector } from 'reselect';
+import { setIsLoading } from '../../redux/blog/blog.actions';
+import { NavigationActions } from 'react-navigation';
 
 
 class BlogList extends React.Component {
@@ -18,7 +20,10 @@ class BlogList extends React.Component {
     refreshData = async () => {
         console.log( "Refreshing data..." );
         let listRef = null;
-        const { listItem, setRefreshing, listUserItem } = this.props;
+        const { listItem, setRefreshing, listUserItem, navigation = null } = this.props;
+        if ( navigation != null ) {
+            navigation.setParams( { "needsRefresh": false } );
+        }
         if ( !this.hasUser ) {
             setRefreshing( { global: true } );
             listRef = await getBlogData();
@@ -30,6 +35,12 @@ class BlogList extends React.Component {
             listUserItem( listRef );
             setTimeout( () => setRefreshing( { user: false } ), 1000 );
         }
+    };
+
+    refreshCallBack = async () => {
+        const { notifyIsLoading } = this.props;
+        await this.refreshData();
+        setTimeout( () => notifyIsLoading( false ), 1000 );
     };
 
     componentDidMount () {
@@ -47,6 +58,12 @@ class BlogList extends React.Component {
     }
 
     render () {
+        const { navigation = null } = this.props;
+        if ( navigation != null ) {
+            if ( navigation.getParam( "needsRefresh", false ) ) {
+                this.refreshData(); // This is async method
+            }
+        }
         const { blogList, isRefreshing, userBlogList, currentUser } = this.props;
         //setTimeout( () => this.refreshData(), 300000 );
         return (
@@ -57,7 +74,7 @@ class BlogList extends React.Component {
                 keyExtractor={ blog => blog.id }
                 renderItem={ blogData => {
                     return (
-                        <BlogListItem blog={ blogData.item } hasUser={ this.hasUser } currentUser={ currentUser } />
+                        <BlogListItem blog={ blogData.item } hasUser={ this.hasUser } currentUser={ currentUser } refreshCallBack={ this.refreshCallBack } />
                     );
                 } }
             />
@@ -71,6 +88,7 @@ const mapDispatchToProps = dispatch => ( {
     listItem: ( item ) => dispatch( listMultiple( item ) ),
     listUserItem: ( item ) => dispatch( listUserMultiple( item ) ),
     setRefreshing: ( item ) => dispatch( setRefreshing( item ) ),
+    notifyIsLoading: ( item ) => dispatch( setIsLoading( item ) ),
 } );
 
 const mapStateToProps = createStructuredSelector( {

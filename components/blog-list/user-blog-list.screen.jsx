@@ -4,6 +4,10 @@ import { connect as connectRedux } from 'react-redux';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import RegistrationPrompt from '../../components/registration-prompt/registration-prompt.component';
 
+import { Text } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faIdCardAlt as headerIcon } from '@fortawesome/free-solid-svg-icons';
+
 class UserBlogListScreen extends React.Component {
 
     static navigationOptions = {
@@ -12,12 +16,19 @@ class UserBlogListScreen extends React.Component {
 
     constructor( props ) {
         super( props );
-        this.props.navigation.setParams( { title: 'My Blogs' } );
+        this.props.navigation.setParams( {
+            title: ( <Text style={ { fontSize: 22 } }> <FontAwesomeIcon size={ 18 } icon={ headerIcon } color={ 'white' } />  My Blogs</Text > )
+
+        } );
     }
 
     render () {
         if ( this.props.currentUser !== null ) {
-            return ( <BlogList hasUser={ true } /> );
+            return (
+                <BlogList hasUser={ true }
+                    navigation={ this.props.navigation }
+                />
+            );
         } else {
             return ( <RegistrationPrompt /> );
         }

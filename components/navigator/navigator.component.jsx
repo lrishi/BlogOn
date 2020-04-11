@@ -20,7 +20,7 @@ import UserBlogListScreen from '../../components/blog-list/user-blog-list.screen
 import {
     setGlobalNavigationContext,
     setGlobalStackNavigationContext,
-    getGlobalStackNavigationContext
+    getGlobalNavigationContext
 } from './navigator.exports';
 
 import {
@@ -57,14 +57,14 @@ const Navigator = ( { currentUser } ) => {
 
             },
             {
-                initialRouteName: 'BlogEditor',
+                initialRouteName: 'MyBlogs',
                 defaultNavigationOptions: ( { navigation } ) => {
                     setGlobalNavigationContext( navigation );
                     if ( navigation.isFocused() ) {
                         let a = navigation.getParam( "title", "BlogOn" );
                         if ( a != currTitle ) {
                             currTitle = a;
-                            getGlobalStackNavigationContext().closeDrawer();
+                            getGlobalNavigationContext().closeDrawer();
                         }
                     }
                 },
@@ -80,14 +80,14 @@ const Navigator = ( { currentUser } ) => {
                 },
             },
             {
-                initialRouteName: 'BlogEditor',
+                initialRouteName: 'MyBlogs',
                 defaultNavigationOptions: ( { navigation } ) => {
                     setGlobalNavigationContext( navigation );
                     if ( navigation.isFocused() ) {
                         let a = navigation.getParam( "title", "BlogOn" );
                         if ( a != currTitle ) {
                             currTitle = a;
-                            getGlobalStackNavigationContext().closeDrawer();
+                            getGlobalNavigationContext().closeDrawer();
                         }
                     }
                 },
