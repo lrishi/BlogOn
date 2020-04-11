@@ -1,6 +1,8 @@
 
 export const TextColor = '#333';
 export const FontSize = 16;
+export const FontSizeLarge = 23;
+export const FontSizeLargest = 32;
 
 export const Colors = {
     primary: '#4C8BF5',

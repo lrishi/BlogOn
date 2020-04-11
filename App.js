@@ -32,14 +32,19 @@ class App extends React.Component {
     Linking.addEventListener( 'url', this.handleDeepLink );
     this.unsubscribeFromAuth = auth.onAuthStateChanged( async userAuth => {
       if ( userAuth ) {
-        const userRef = await createUserProfileDocument( userAuth );
-        userRef.onSnapshot( snapShot => {
-          setCurrentUser( {
-            id: snapShot.id,
-            ...snapShot.data()
-          }
-          );
-        } );
+        try {
+          const userRef = await createUserProfileDocument( userAuth );
+          userRef.onSnapshot( snapShot => {
+            setCurrentUser( {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+            );
+          } );
+        } catch ( error ) {
+          setCurrentUser( null );
+          alert( error.message );
+        }
         setTimeout( () => notifyIsLoading( false ), 2000 );
       } else {
         setCurrentUser( null );

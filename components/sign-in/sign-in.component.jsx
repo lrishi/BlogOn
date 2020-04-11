@@ -2,18 +2,13 @@ import React from 'react';
 import { ScrollView, Text } from 'react-native';
 import { auth } from '../../firebase/firebase.utils';
 import { connect as connectRedux } from 'react-redux';
+import { setIsLoading } from '../../redux/blog/blog.actions';
 
 import styles from './sign-in.styles';
-import { setIsLoading } from '../../redux/blog/blog.actions';
 
 import {
     DecoratedTextInput,
-    DecoratedButtonPrimary,
-    DecoratedButtonSecondary,
-    DecoratedButtonSuccess,
     DecoratedButtonInfo,
-    DecoratedButtonWarning,
-    DecoratedButtonDanger,
 } from '../../components/decorated-natives/decorated-natives.components';
 
 const INITIAL_STATE = {

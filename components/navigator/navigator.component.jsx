@@ -33,11 +33,12 @@ const Navigator = ( { currentUser } ) => {
     let currTitle = "BlogOn!";
     var DrawerNavigator = null;
     var commonNavs = {
-        BlogEditor: {
-            screen: BlogEditorScreen,
-        },
+
         BlogList: {
             screen: BlogListScreen,
+        },
+        BlogEditor: {
+            screen: BlogEditorScreen,
         },
         MyBlogs: {
             screen: UserBlogListScreen,
@@ -46,13 +47,13 @@ const Navigator = ( { currentUser } ) => {
     if ( currentUser === null ) {
         DrawerNavigator = createDrawerNavigator(
             {
+                ...commonNavs,
                 SignIn: {
                     screen: SignInScreen,
                 },
                 SignUp: {
                     screen: SignUpScreen,
                 },
-                ...commonNavs
 
             },
             {
@@ -73,10 +74,10 @@ const Navigator = ( { currentUser } ) => {
     } else {
         DrawerNavigator = createDrawerNavigator(
             {
+                ...commonNavs,
                 SignOut: {
                     screen: SignOutScreen,
                 },
-                ...commonNavs
             },
             {
                 initialRouteName: 'BlogEditor',

@@ -13,37 +13,46 @@ class BlogList extends React.Component {
     constructor( props ) {
         super( props );
         this.hasUser = this.props.hasOwnProperty( 'hasUser' ) ? this.props.hasUser : false;
-        this.isRefreshing = false;
     }
 
     refreshData = async () => {
         console.log( "Refreshing data..." );
         let listRef = null;
         const { listItem, setRefreshing, listUserItem } = this.props;
-        setRefreshing( true );
         if ( !this.hasUser ) {
+            setRefreshing( { global: true } );
             listRef = await getBlogData();
             listItem( listRef );
+            setTimeout( () => setRefreshing( { global: false } ), 1000 );
         } else {
+            setRefreshing( { user: true } );
             listRef = await getUserBlogData( this.props.currentUser );
             listUserItem( listRef );
+            setTimeout( () => setRefreshing( { user: false } ), 1000 );
         }
     };
 
     componentDidMount () {
-        if ( this.props.blogList === null ||
-            this.props.blogList.length === 0 ) {
-            this.refreshData();
+        if ( !this.hasUser ) {
+            if ( this.props.blogList === null ||
+                this.props.blogList.length === 0 ) {
+                this.refreshData();
+            }
+        } else {
+            if ( this.props.userBlogList === null ||
+                this.props.userBlogList.length === 0 ) {
+                this.refreshData();
+            }
         }
     }
 
     render () {
         const { blogList, isRefreshing, userBlogList, currentUser } = this.props;
-
+        //setTimeout( () => this.refreshData(), 300000 );
         return (
             <FlatList
                 onRefresh={ this.refreshData }
-                refreshing={ isRefreshing }
+                refreshing={ this.props.hasUser ? isRefreshing.user : isRefreshing.global }
                 data={ this.hasUser ? userBlogList : blogList }
                 keyExtractor={ blog => blog.id }
                 renderItem={ blogData => {

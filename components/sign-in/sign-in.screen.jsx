@@ -1,10 +1,9 @@
 import React from 'react';
-import { Text } from 'react-native';
-
 import SignIn from './sign-in.component';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
-import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { Text } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faLock as headerIcon } from '@fortawesome/free-solid-svg-icons';
 
 
 class SignInScreen extends React.Component {
@@ -16,7 +15,7 @@ class SignInScreen extends React.Component {
     constructor( props ) {
         super( props );
         this.props.navigation.setParams( {
-            title: ( <Text style={ { fontSize: 22 } }> <FontAwesomeIcon size={ 18 } icon={ faLock } color={ 'white' } />  USER LOGIN</Text > )
+            title: ( <Text style={ { fontSize: 22 } }> <FontAwesomeIcon size={ 18 } icon={ headerIcon } color={ 'white' } />  USER LOGIN</Text > )
         } );
     }
 

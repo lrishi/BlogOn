@@ -1,7 +1,54 @@
 import React from 'react';
 import { TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faInfoCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './decorated-natives.styles';
+import CurrentTheme from '../../themes/current.theme';
+
+export const DecoratedIndicator = ( props ) => {
+    return (
+        <Text { ...props }
+            style={ props.hasOwnProperty( 'style' ) ?
+                StyleSheet.compose( styles.decoratedIndicator, props.style ) :
+                styles.decoratedIndicator }
+        />
+    );
+};
+
+export const DecoratedIndicatorPrimary = DecoratedIndicator;
+
+export const DecoratedIndicatorInfo = ( props ) => {
+    return (
+        <DecoratedIndicator
+            { ...props }
+            style={ props.hasOwnProperty( 'style' ) ?
+                StyleSheet.compose( styles.decoratedIndicatorInfo, props.style ) :
+                styles.decoratedIndicatorInfo }
+        >
+            <FontAwesomeIcon
+                icon={ faInfoCircle }
+                size={ CurrentTheme.FontSizeLarge }
+                style={ styles.infoIcon } />  { props.children }
+        </DecoratedIndicator>
+    );
+};
+
+export const DecoratedIndicatorWarning = ( props ) => {
+    return (
+        <DecoratedIndicator
+            { ...props }
+            style={ props.hasOwnProperty( 'style' ) ?
+                StyleSheet.compose( styles.decoratedIndicatorWarning, props.style ) :
+                styles.decoratedIndicatorWarning }
+        >
+            <FontAwesomeIcon
+                icon={ faExclamationTriangle }
+                size={ CurrentTheme.FontSizeLarge }
+                style={ styles.warningIcon } />  { props.children }
+        </DecoratedIndicator>
+    );
+};
 
 export const DecoratedTextInput = ( props ) => {
     return (
@@ -12,8 +59,6 @@ export const DecoratedTextInput = ( props ) => {
         />
     );
 };
-
-
 
 export const DecoratedButton = ( props ) => {
     const { title = "", textStyle = "" } = props;
