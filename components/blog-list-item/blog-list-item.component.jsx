@@ -7,7 +7,7 @@ import { setIsLoading } from '../../redux/blog/blog.actions';
 import { editBlog, viewBlog } from '../../redux/blog/blog.actions';
 import { deleteBlogItem } from '../../firebase/firebase.utils';
 import { getGlobalStackNavigationContext } from '../navigator/navigator.exports';
-
+import { Linking } from 'expo';
 import { DecoratedButtonSecondary } from '../../components/decorated-natives/decorated-natives.components';
 
 import styles from './blog-list-item.styles';
@@ -55,11 +55,12 @@ class BlogListItem extends React.Component {
 
     shareItem = async () => {
         const { blog } = this.props;
+        const redirectUrl = "https://tinyurl.com/vkgpzd3?id=" + blog.id;
         try {
             await Share.share(
                 {
                     message:
-                        "Checkout my blog '" + blog.title + "' on BlogOn!. Click here: http://blogs.blogon.com/post/pub?id=" + blog.id,
+                        "Checkout my blog '" + blog.title + "' on BlogOn!. Click here: " + redirectUrl
                 },
                 {
                     title: 'Sharing post: ' + blog.title,

@@ -57,7 +57,7 @@ const Navigator = ( { currentUser } ) => {
 
             },
             {
-                initialRouteName: 'MyBlogs',
+                initialRouteName: 'BlogList',
                 defaultNavigationOptions: ( { navigation } ) => {
                     setGlobalNavigationContext( navigation );
                     if ( navigation.isFocused() ) {

@@ -16,5 +16,10 @@ export default StyleSheet.create( {
     },
     indicator: {
         marginTop: 40
+    },
+    versionInfo: {
+        color: '#DDD',
+        textAlign: "center",
+        marginTop: 200,
     }
 } );

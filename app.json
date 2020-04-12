@@ -26,7 +26,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.lovelrishi.blogon",
+      "package": "com.blogon.post",
       "versionCode": 1,
       "intentFilters": [
         {
@@ -34,8 +34,8 @@
           "data": [
             {
               "scheme": "http",
-              "host": "*.blogon.com",
-              "pathPrefix": "post/pub"
+              "host": "post.blogon.com",
+              "pathPrefix": "view/post"
             }
           ],
           "category": [

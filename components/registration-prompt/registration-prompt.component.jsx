@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { getGlobalNavigationContext } from '../../components/navigator/navigator.exports';
 
 import {
@@ -13,7 +13,7 @@ import styles from "./registration-prompt.styles";
 const RegistrationPrompt = () => (
 
     <ScrollView contentContainerStyle={ styles.container }>
-        <DecoratedIndicatorInfo style={ styles.indicator } >REGISTRATION REQUIRED</DecoratedIndicatorInfo>
+        <DecoratedIndicatorInfo style={ styles.indicator } >Authentication required</DecoratedIndicatorInfo>
         <DecoratedButtonWarning
             title="  Existing User? Sign In  "
             onPress={ () => getGlobalNavigationContext().navigate( 'SignIn' ) }
@@ -24,6 +24,7 @@ const RegistrationPrompt = () => (
             onPress={ () => getGlobalNavigationContext().navigate( 'SignUp' ) }
             style={ styles.signUpButton }
         />
+        <Text style={ styles.versionInfo }>Version 1.0.0</Text>
     </ScrollView>
 );
 
