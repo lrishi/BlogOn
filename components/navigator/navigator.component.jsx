@@ -1,5 +1,6 @@
 /* Libraries */
 import React from 'react';
+import { TouchableOpacity, Text } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
@@ -20,14 +21,20 @@ import UserBlogListScreen from '../../components/blog-list/user-blog-list.screen
 import {
     setGlobalNavigationContext,
     setGlobalStackNavigationContext,
-    getGlobalNavigationContext
+    getGlobalNavigationContext,
 } from './navigator.exports';
 
 import {
     selectCurrentUser
 } from "../../redux/user/user.selectors";
 
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import {
+    faShareAlt as shareIcon,
+} from '@fortawesome/free-solid-svg-icons';
 
+import CurrentTheme from '../../themes/current.theme';
+import styles from './navigator.styles';
 
 const Navigator = ( { currentUser } ) => {
     let currTitle = "BlogOn!";
@@ -104,15 +111,50 @@ const Navigator = ( { currentUser } ) => {
                 initialRouteName: 'Main',
                 defaultNavigationOptions: ( { navigation } ) => {
                     setGlobalStackNavigationContext( navigation );
+                    const showBackButton = navigation.getParam( "showBackButton", false );
+                    const showShareButton = navigation.getParam( "showShareButton", false );
+                    let backButton = {};
+                    let shareButton = {};
+                    if ( !showBackButton ) {
+                        backButton.headerLeft = () => (
+                            <TouchableOpacity
+                                style={ styles.headerButton }
+                                onPress={ () => getGlobalNavigationContext().toggleDrawer() }
+                            >
+                                <Text style={ styles.headerText }>{ currTitle }</Text>
+                            </TouchableOpacity>
+                        );
+                        backButton.title = "";
+                    } else {
+                        backButton = {
+                            title: currTitle,
+                        };
+                    }
+                    if ( showShareButton ) {
+                        const shareHandler = navigation.getParam( 'shareHandler', null );
+                        shareButton = {
+                            headerRight: () => {
+                                return (
+                                    <TouchableOpacity
+                                        style={ styles.shareButton }
+                                        onPress={ shareHandler }
+                                    >
+                                        <FontAwesomeIcon icon={ shareIcon } size={ 21 } color={ 'white' } />
+                                    </TouchableOpacity>
+                                );
+                            }
+                        };
+                    }
                     return {
+                        ...backButton,
+                        ...shareButton,
                         headerMode: 'screen',
                         headerStyle: {
-                            backgroundColor: "indigo",
+                            backgroundColor: CurrentTheme.Colors.primary,
                         },
                         headerTitleStyle: {
-                            color: 'white'
+                            color: CurrentTheme.ComplementColors.primary
                         },
-                        title: currTitle,
                     };
                 },
                 headerMode: 'screen',

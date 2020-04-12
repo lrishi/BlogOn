@@ -7,7 +7,7 @@ import { setIsLoading } from '../../redux/blog/blog.actions';
 import { editBlog, viewBlog } from '../../redux/blog/blog.actions';
 import { deleteBlogItem } from '../../firebase/firebase.utils';
 import { getGlobalStackNavigationContext } from '../navigator/navigator.exports';
-import { Linking } from 'expo';
+
 import { DecoratedButtonSecondary } from '../../components/decorated-natives/decorated-natives.components';
 
 import styles from './blog-list-item.styles';
@@ -21,8 +21,8 @@ class BlogListItem extends React.Component {
 
         const { currentUser, blog, notifyIsLoading, refreshCallBack } = this.props;
         Alert.alert(
-            'Warning! Irreversible action!',
-            'Are you sure you want to delete this post?',
+            'Warning!',
+            'A deleted post cannot be restored. Are you sure you want to delete this post?',
             [
                 {
                     text: 'NO',
@@ -42,9 +42,11 @@ class BlogListItem extends React.Component {
     };
 
     editItem = () => {
-        const { blog, editBlogItem } = this.props;
+        const { notifyIsLoading, blog, editBlogItem } = this.props;
+        notifyIsLoading( true );
         editBlogItem( blog );
         getGlobalStackNavigationContext().navigate( 'BlogEditor' );
+        setTimeout( () => notifyIsLoading( false ), 1000 );
     };
 
     handleViewBlog = () => {
@@ -98,9 +100,12 @@ class BlogListItem extends React.Component {
                         hasUser ?
                             (
                                 <View style={ styles.blogActionWrapper } >
-                                    <TouchableOpacity style={ styles.blogActionButton }
+                                    <TouchableOpacity style={ {
+                                        ...styles.blogActionButton,
+                                        ...styles.blogEditButton
+                                    } }
                                         onPress={ this.editItem } >
-                                        <FontAwesomeIcon icon={ faEdit } />
+                                        <FontAwesomeIcon icon={ faEdit } color={ 'white' } />
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={ {

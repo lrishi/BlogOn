@@ -1,6 +1,6 @@
 import React from 'react';
 import { selectBlogList, selectUserBlogList, selectBlogIsRefreshing } from '../../redux/blog/blog.selectors';
-import { FlatList, Text } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import { connect as connectRedux } from 'react-redux';
 import BlogListItem from '../../components/blog-list-item/blog-list-item.component';
 import { listMultiple, listUserMultiple, setRefreshing } from '../../redux/blog/blog.actions';
@@ -8,8 +8,12 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { getBlogData, getUserBlogData } from '../../firebase/firebase.utils';
 import { createStructuredSelector } from 'reselect';
 import { setIsLoading } from '../../redux/blog/blog.actions';
-import { NavigationActions } from 'react-navigation';
+import { editBlog } from '../../redux/blog/blog.actions';
 
+import { DecoratedButtonInfo } from '../../components/decorated-natives/decorated-natives.components';
+import { getGlobalStackNavigationContext } from '../../components/navigator/navigator.exports';
+
+import styles from './blog-list.styles';
 
 class BlogList extends React.Component {
     constructor( props ) {
@@ -57,6 +61,40 @@ class BlogList extends React.Component {
         }
     }
 
+    handleNewPostButton = () => {
+        const { notifyIsLoading, editBlogItem } = this.props;
+        notifyIsLoading( true );
+        editBlogItem( {} );
+        getGlobalStackNavigationContext().navigate( 'BlogEditor' );
+        setTimeout( () => notifyIsLoading( false ), 1000 );
+
+    };
+
+    listEmptyComponent = () => {
+        const { isRefreshing, hasUser } = this.props;
+        if ( hasUser ) {
+            return (
+                <View>
+                    <Text style={ styles.emptyListBanner } >
+                        { isRefreshing.user ? "Updating..." : "You've written no blogs yet." }
+                    </Text>
+                    <DecoratedButtonInfo
+                        style={ styles.newPostButton }
+                        title="Write a New Post"
+                        onPress={ this.handleNewPostButton }
+                    />
+                </View>
+            );
+        } else {
+            return (
+                <View>
+                    <Text style={ styles.emptyListBanner } >
+                        { isRefreshing.global ? "Updating..." : "No posts to show" }
+                    </Text>
+                </View>
+            );
+        }
+    };
     render () {
         const { navigation = null } = this.props;
         if ( navigation != null ) {
@@ -77,6 +115,7 @@ class BlogList extends React.Component {
                         <BlogListItem blog={ blogData.item } hasUser={ this.hasUser } currentUser={ currentUser } refreshCallBack={ this.refreshCallBack } />
                     );
                 } }
+                ListEmptyComponent={ this.listEmptyComponent() }
             />
 
         );
@@ -88,6 +127,7 @@ const mapDispatchToProps = dispatch => ( {
     listItem: ( item ) => dispatch( listMultiple( item ) ),
     listUserItem: ( item ) => dispatch( listUserMultiple( item ) ),
     setRefreshing: ( item ) => dispatch( setRefreshing( item ) ),
+    editBlogItem: ( item ) => dispatch( editBlog( item ) ),
     notifyIsLoading: ( item ) => dispatch( setIsLoading( item ) ),
 } );
 

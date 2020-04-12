@@ -19,7 +19,16 @@ export const BlogTemplate = () => (
             'ts_updated': null
         },
         validate: ( { title, editor, image, author } ) => {
-            return ( title !== null && editor != null && image != null && author != null );
+            return (
+                title !== null &&
+                editor !== null &&
+                image !== null &&
+                author !== null &&
+                title.trim() !== "" &&
+                editor.trim() !== "" &&
+                image.trim() !== "" &&
+                author.toString().trim() !== ""
+            );
         }
     }
 );

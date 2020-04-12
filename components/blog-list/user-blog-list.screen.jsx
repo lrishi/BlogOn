@@ -17,7 +17,9 @@ class UserBlogListScreen extends React.Component {
     constructor( props ) {
         super( props );
         this.props.navigation.setParams( {
-            title: ( <Text style={ { fontSize: 22 } }> <FontAwesomeIcon size={ 18 } icon={ headerIcon } color={ 'white' } />  My Blogs</Text > )
+            title: (
+                <Text style={ { fontSize: 22 } }> <FontAwesomeIcon size={ 18 } icon={ headerIcon } color={ 'white' } />  My Blogs
+                </Text > )
 
         } );
     }

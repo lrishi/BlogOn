@@ -171,6 +171,7 @@ class BlogEditor extends React.Component {
                         title={ <FontAwesomeIcon icon={ cameraIcon } size={ 30 } color={ 'black' } /> }
                         onPress={ this.takePicture } />
                 </View>
+
                 <DecoratedTextInput
                     contextMenuHidden={ false }
                     value={ blog.editor }

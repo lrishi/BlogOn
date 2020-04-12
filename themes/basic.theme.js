@@ -5,8 +5,8 @@ export const FontSizeLarge = 23;
 export const FontSizeLargest = 32;
 
 export const Colors = {
-    primary: '#4C8BF5',
-    secondary: 'white',
+    primary: 'indigo',
+    secondary: '#F9F9F9',
     danger: '#DE5246',
     success: '#1AA260',
     info: 'indigo',

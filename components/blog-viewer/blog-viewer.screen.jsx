@@ -8,11 +8,17 @@ class BlogViewerScreen extends React.Component {
     };
     constructor( props ) {
         super( props );
-        this.props.navigation.setParams( { title: 'Viewing Post' } );
+        this.props.navigation.setParams(
+            {
+                title: 'Viewing Post',
+                showBackButton: true,
+                showShareButton: true
+            }
+        );
     }
 
     render () {
-        return ( <BlogViewer /> );
+        return ( <BlogViewer navigation={ this.props.navigation } /> );
     };
 }
 

@@ -12,8 +12,8 @@ import {
 } from '../../components/decorated-natives/decorated-natives.components';
 
 const INITIAL_STATE = {
-    email: 'lovelworks@gmail.com',
-    password: 'kishore11',
+    email: '',
+    password: '',
 };
 
 class SignIn extends React.Component {

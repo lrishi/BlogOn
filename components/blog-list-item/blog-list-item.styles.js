@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import CurrentTheme from '../../themes/current.theme';
 
 export default StyleSheet.create( {
     blogListItemContainer: {
@@ -11,8 +12,11 @@ export default StyleSheet.create( {
         backgroundColor: 'white',
         alignSelf: "center",
         marginTop: 10,
-        elevation: 2,
+        elevation: 4,
         padding: 10,
+        borderColor: '#CCC',
+        borderWidth: 1,
+        borderRadius: 4,
     },
     blogListThumbnail: {
         width: '45%',
@@ -57,8 +61,12 @@ export default StyleSheet.create( {
         padding: 5
     },
     deleteButton: {
-        backgroundColor: 'red',
-        color: 'white',
+        backgroundColor: CurrentTheme.Colors.danger,
+        color: CurrentTheme.ComplementColors.danger,
+    },
+    blogEditButton: {
+        backgroundColor: CurrentTheme.Colors.warning,
+        color: CurrentTheme.ComplementColors.danger,
     },
     shareButton: {
         paddingTop: 5,

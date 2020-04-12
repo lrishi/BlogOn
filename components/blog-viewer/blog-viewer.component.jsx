@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Text, Image } from 'react-native';
+import { Share, ScrollView, Text, Image } from 'react-native';
 import { connect as connectRedux } from 'react-redux';
 
 import { selectBlogViewable } from '../../redux/blog/blog.selectors';
@@ -11,7 +11,34 @@ class BlogViewer extends React.Component {
 
     constructor( props ) {
         super( props );
+        props.navigation.setParams(
+            {
+                shareHandler: () => {
+                    const { blog } = props;
+                    this.shareItem( blog );
+                }
+            }
+        );
+
     }
+
+    shareItem = async () => {
+        const { blog } = this.props;
+        const redirectUrl = "https://tinyurl.com/vkgpzd3?id=" + blog.id;
+        try {
+            await Share.share(
+                {
+                    message:
+                        "Checkout my blog '" + blog.title + "' on BlogOn!. Click here: " + redirectUrl
+                },
+                {
+                    title: 'Sharing post: ' + blog.title,
+                }
+            );
+        } catch ( error ) {
+            alert( error.message );
+        }
+    };
 
     render () {
         const { blog } = this.props;
