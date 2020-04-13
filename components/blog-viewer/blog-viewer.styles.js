@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import CurrentTheme from '../../themes/current.theme';
-import { FontSizeLarge } from '../../themes/basic.theme';
+
 
 export default StyleSheet.create( {
     container: {
@@ -28,7 +28,7 @@ export default StyleSheet.create( {
         paddingRight: 15,
     },
     blogText: {
-        fontSize: FontSizeLarge,
+        fontSize: CurrentTheme.FontSizeLarge,
         padding: 20,
         paddingBottom: 50,
         textAlign: "justify",

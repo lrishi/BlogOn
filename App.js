@@ -6,6 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import Navigator from './components/navigator/navigator.component';
 import { auth, createUserProfileDocument, firestore } from './firebase/firebase.utils';
+
 import { connect as connectRedux } from 'react-redux';
 import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from "./redux/user/user.selectors";
@@ -70,31 +71,43 @@ class App extends React.Component {
 
   componentDidMount () {
     const { setCurrentUser, notifyIsLoading } = this.props;
+
     Linking.getInitialURL().then( url => {
       this.handleDeepLink( { url: url } );
       Linking.addEventListener( 'url',
         ( event ) => this.handleDeepLink( event ) );
     } );
-    this.unsubscribeFromAuth = auth.onAuthStateChanged( async userAuth => {
-      if ( userAuth ) {
-        try {
-          const userRef = await createUserProfileDocument( userAuth );
-          userRef.onSnapshot( snapShot => {
-            setCurrentUser( {
-              id: snapShot.id,
-              ...snapShot.data()
-            }
-            );
-          } );
-        } catch ( error ) {
+
+    notifyIsLoading( true );
+    this.applicationIsLoading = true;
+
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(
+      async ( userAuth ) => {
+        if ( userAuth ) {
+          try {
+            const userRef = await createUserProfileDocument( userAuth );
+            userRef.onSnapshot( snapShot => {
+              setCurrentUser( {
+                id: snapShot.id,
+                ...snapShot.data()
+              }
+              );
+            } );
+          } catch ( error ) {
+            setCurrentUser( null );
+            alert( error.message );
+          }
+          setTimeout( () => notifyIsLoading( false ), 2000 );
+        } else {
           setCurrentUser( null );
-          alert( error.message );
         }
-        setTimeout( () => notifyIsLoading( false ), 2000 );
-      } else {
-        setCurrentUser( null );
+        if ( this.applicationIsLoading ) {
+          setTimeout( () => notifyIsLoading( false ), 2000 );
+          this.applicationIsLoading = false;
+        }
       }
-    } );
+
+    );
   }
 
   componentWillUnmount () {
@@ -109,6 +122,8 @@ class App extends React.Component {
       <SafeAreaView style={ { flex: 1 } }>
         <Spinner
           visible={ isLoading > 0 ? true : false }
+          textContent={ 'Hold on! Loading...' }
+          textStyle={ { color: '#F9F9F9', fontWeight: 'normal', marginTop: -30 } }
         />
         <Navigator />
       </SafeAreaView>
