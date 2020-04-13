@@ -3,12 +3,12 @@ import { selectBlogList, selectUserBlogList, selectBlogIsRefreshing } from '../.
 import { FlatList, Text, View } from 'react-native';
 import { connect as connectRedux } from 'react-redux';
 import BlogListItem from '../../components/blog-list-item/blog-list-item.component';
-import { listMultiple, listUserMultiple, setRefreshing } from '../../redux/blog/blog.actions';
-import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { blogActionListMultiple, blogActionListUserMultiple, blogActionSetRefreshing } from '../../redux/blog/blog.actions';
+import { userSelectorGetCurrentUser } from '../../redux/user/user.selectors';
 import { getBlogData, getUserBlogData } from '../../firebase/firebase.utils';
 import { createStructuredSelector } from 'reselect';
-import { setIsLoading } from '../../redux/blog/blog.actions';
-import { editBlog } from '../../redux/blog/blog.actions';
+import { blogActionSetIsLoading } from '../../redux/blog/blog.actions';
+import { blogActionEditBlog } from '../../redux/blog/blog.actions';
 
 import { DecoratedButtonInfo } from '../../components/decorated-natives/decorated-natives.components';
 import { getGlobalStackNavigationContext } from '../../components/navigator/navigator.exports';
@@ -124,18 +124,18 @@ class BlogList extends React.Component {
 };
 
 const mapDispatchToProps = dispatch => ( {
-    listItem: ( item ) => dispatch( listMultiple( item ) ),
-    listUserItem: ( item ) => dispatch( listUserMultiple( item ) ),
-    setRefreshing: ( item ) => dispatch( setRefreshing( item ) ),
-    editBlogItem: ( item ) => dispatch( editBlog( item ) ),
-    notifyIsLoading: ( item ) => dispatch( setIsLoading( item ) ),
+    listItem: ( item ) => dispatch( blogActionListMultiple( item ) ),
+    listUserItem: ( item ) => dispatch( blogActionListUserMultiple( item ) ),
+    setRefreshing: ( item ) => dispatch( blogActionSetRefreshing( item ) ),
+    editBlogItem: ( item ) => dispatch( blogActionEditBlog( item ) ),
+    notifyIsLoading: ( item ) => dispatch( blogActionSetIsLoading( item ) ),
 } );
 
 const mapStateToProps = createStructuredSelector( {
     blogList: selectBlogList,
     userBlogList: selectUserBlogList,
     isRefreshing: selectBlogIsRefreshing,
-    currentUser: selectCurrentUser
+    currentUser: userSelectorGetCurrentUser
 } );
 
 export default connectRedux( mapStateToProps, mapDispatchToProps )( BlogList );

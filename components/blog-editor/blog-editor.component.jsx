@@ -2,12 +2,12 @@ import React from 'react';
 import { BackHandler, Alert, ScrollView, Image, Button, TextInput, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { connect as connectRedux } from 'react-redux';
-import { selectCurrentUser } from "../../redux/user/user.selectors";
+import { userSelectorGetCurrentUser } from "../../redux/user/user.selectors";
 import { selectBlogEditable } from '../../redux/blog/blog.selectors';
 import firebase, { firestore } from "../../firebase/firebase.utils";
-import { editBlog } from '../../redux/blog/blog.actions';
+import { blogActionEditBlog } from '../../redux/blog/blog.actions';
 import { BlogTemplate } from '../../redux/blog/blog.types';
-import { setIsLoading } from '../../redux/blog/blog.actions';
+import { blogActionSetIsLoading } from '../../redux/blog/blog.actions';
 import { getGlobalNavigationContext, getGlobalStackNavigationContext } from '../../components/navigator/navigator.exports';
 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -192,12 +192,12 @@ class BlogEditor extends React.Component {
 };
 
 const mapStateToProps = ( state ) => ( {
-    currentUser: selectCurrentUser( state ),
+    currentUser: userSelectorGetCurrentUser( state ),
     editableBlog: selectBlogEditable( state )
 } );
 
 const mapDispatchToProps = dispatch => ( {
-    editItem: ( item ) => dispatch( editBlog( item ) ),
-    notifyIsLoading: ( item ) => dispatch( setIsLoading( item ) ),
+    editItem: ( item ) => dispatch( blogActionEditBlog( item ) ),
+    notifyIsLoading: ( item ) => dispatch( blogActionSetIsLoading( item ) ),
 } );
 export default connectRedux( mapStateToProps, mapDispatchToProps )( BlogEditor );

@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, Text } from 'react-native';
 import { auth } from '../../firebase/firebase.utils';
 import { connect as connectRedux } from 'react-redux';
-import { setIsLoading } from '../../redux/blog/blog.actions';
+import { blogActionSetIsLoading } from '../../redux/blog/blog.actions';
 
 import styles from './sign-in.styles';
 
@@ -75,7 +75,7 @@ class SignIn extends React.Component {
 };
 
 const mapDispatchToProps = dispatch => ( {
-    notifyIsLoading: ( item ) => dispatch( setIsLoading( item ) ),
+    notifyIsLoading: ( item ) => dispatch( blogActionSetIsLoading( item ) ),
 } );
 
 export default connectRedux( null, mapDispatchToProps )( SignIn );

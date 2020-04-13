@@ -3,8 +3,8 @@ import { Share, TouchableOpacity, View, Text, Image, Alert } from 'react-native'
 import { connect as connectRedux } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faShareSquare, faClock, faEdit, faTimesCircle } from '@fortawesome/free-regular-svg-icons';
-import { setIsLoading } from '../../redux/blog/blog.actions';
-import { editBlog, viewBlog } from '../../redux/blog/blog.actions';
+import { blogActionSetIsLoading } from '../../redux/blog/blog.actions';
+import { blogActionEditBlog, blogActionViewBlog } from '../../redux/blog/blog.actions';
 import { deleteBlogItem } from '../../firebase/firebase.utils';
 import { getGlobalStackNavigationContext } from '../navigator/navigator.exports';
 
@@ -42,16 +42,16 @@ class BlogListItem extends React.Component {
     };
 
     editItem = () => {
-        const { notifyIsLoading, blog, editBlogItem } = this.props;
+        const { notifyIsLoading, blog, blogActionEditBlogItem } = this.props;
         notifyIsLoading( true );
-        editBlogItem( blog );
+        blogActionEditBlogItem( blog );
         getGlobalStackNavigationContext().navigate( 'BlogEditor' );
         setTimeout( () => notifyIsLoading( false ), 1000 );
     };
 
-    handleViewBlog = () => {
-        const { blog, viewBlogItem } = this.props;
-        viewBlogItem( blog );
+    handleblogActionViewBlog = () => {
+        const { blog, blogActionViewBlogItem } = this.props;
+        blogActionViewBlogItem( blog );
         getGlobalStackNavigationContext().navigate( 'BlogViewer' );
     };
 
@@ -79,7 +79,7 @@ class BlogListItem extends React.Component {
             <TouchableOpacity
                 activeOpacity={ 0.75 }
                 style={ styles.blogListItemContainer }
-                onPress={ this.handleViewBlog }>
+                onPress={ this.handleblogActionViewBlog }>
 
                 <Image
                     style={ styles.blogListThumbnail }
@@ -135,9 +135,9 @@ class BlogListItem extends React.Component {
     };
 }
 const mapDispatchToProps = dispatch => ( {
-    editBlogItem: ( item ) => dispatch( editBlog( item ) ),
-    viewBlogItem: ( item ) => dispatch( viewBlog( item ) ),
-    notifyIsLoading: ( item ) => dispatch( setIsLoading( item ) ),
+    blogActionEditBlogItem: ( item ) => dispatch( blogActionEditBlog( item ) ),
+    blogActionViewBlogItem: ( item ) => dispatch( blogActionViewBlog( item ) ),
+    notifyIsLoading: ( item ) => dispatch( blogActionSetIsLoading( item ) ),
 } );
 
 export default connectRedux( null, mapDispatchToProps )( BlogListItem );

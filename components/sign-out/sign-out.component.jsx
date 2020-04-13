@@ -2,8 +2,8 @@ import React from 'react';
 import { ScrollView, Text, Button } from 'react-native';
 import { auth } from '../../firebase/firebase.utils';
 import { connect as connectRedux } from 'react-redux';
-import { setIsLoading } from '../../redux/blog/blog.actions';
-import { listUserMultiple, setRefreshing } from '../../redux/blog/blog.actions';
+import { blogActionSetIsLoading } from '../../redux/blog/blog.actions';
+import { blogActionListUserMultiple, blogActionSetRefreshing } from '../../redux/blog/blog.actions';
 
 import styles from './sign-out.styles';
 
@@ -18,12 +18,12 @@ class SignOut extends React.Component {
     }
 
     signOutHandler = async () => {
-        const { notifyIsLoading, listUserItem, setRefreshing } = this.props;
+        const { notifyIsLoading, listUserItem, blogActionSetRefreshing } = this.props;
         notifyIsLoading( true );
         try {
             await auth.signOut();
             listUserItem( [] );
-            setRefreshing( false );
+            blogActionSetRefreshing( false );
             setTimeout( () => notifyIsLoading( false ), 1000 );
         } catch ( error ) {
             alert( error.message );
@@ -47,9 +47,9 @@ class SignOut extends React.Component {
     }
 };
 const mapDispatchToProps = dispatch => ( {
-    notifyIsLoading: ( item ) => dispatch( setIsLoading( item ) ),
-    listUserItem: ( item ) => dispatch( listUserMultiple( item ) ),
-    setRefreshing: ( item ) => dispatch( setRefreshing( item ) ),
+    notifyIsLoading: ( item ) => dispatch( blogActionSetIsLoading( item ) ),
+    listUserItem: ( item ) => dispatch( blogActionListUserMultiple( item ) ),
+    blogActionSetRefreshing: ( item ) => dispatch( blogActionSetRefreshing( item ) ),
 } );
 
 export default connectRedux( null, mapDispatchToProps )( SignOut );

@@ -25,7 +25,7 @@ import {
 } from './navigator.exports';
 
 import {
-    selectCurrentUser
+    userSelectorGetCurrentUser
 } from "../../redux/user/user.selectors";
 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -164,7 +164,7 @@ const Navigator = ( { currentUser } ) => {
 };
 
 const mapStateToProps = ( state ) => ( {
-    currentUser: selectCurrentUser( state ),
+    currentUser: userSelectorGetCurrentUser( state ),
 } );
 
 

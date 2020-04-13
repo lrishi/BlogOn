@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import BlogEditor from './blog-editor.component';
 import RegistrationPrompt from '../../components/registration-prompt/registration-prompt.component';
 import { connect as connectRedux } from 'react-redux';
-import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { userSelectorGetCurrentUser } from '../../redux/user/user.selectors';
 
 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -36,7 +36,7 @@ class BlogEditorScreen extends React.Component {
 }
 
 const mapStateToProps = ( state ) => ( {
-    currentUser: selectCurrentUser( state )
+    currentUser: userSelectorGetCurrentUser( state )
 } );
 
 export default connectRedux( mapStateToProps )( BlogEditorScreen );

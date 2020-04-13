@@ -1,7 +1,7 @@
 import React from 'react';
 import BlogList from './blog-list.component';
 import { connect as connectRedux } from 'react-redux';
-import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { userSelectorGetCurrentUser } from '../../redux/user/user.selectors';
 import RegistrationPrompt from '../../components/registration-prompt/registration-prompt.component';
 
 import { Text } from 'react-native';
@@ -38,7 +38,7 @@ class UserBlogListScreen extends React.Component {
 }
 
 const mapStateToProps = ( state ) => ( {
-    currentUser: selectCurrentUser( state )
+    currentUser: userSelectorGetCurrentUser( state )
 } );
 
 export default connectRedux( mapStateToProps )( UserBlogListScreen );
