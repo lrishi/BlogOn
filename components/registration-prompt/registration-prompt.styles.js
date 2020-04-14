@@ -12,7 +12,6 @@ export default StyleSheet.create( {
     },
     container: {
         backgroundColor: 'white',
-        height: '100%',
     },
     indicator: {
         marginTop: 40

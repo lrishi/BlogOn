@@ -130,7 +130,6 @@ class App extends React.Component {
             width: Dimensions.get( "window" ).width,
             height: Dimensions.get( "window" ).height,
         } );
-        console.log( "Dimensions Changed" );
     };
 
     componentDidMount () {

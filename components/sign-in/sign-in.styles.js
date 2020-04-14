@@ -3,7 +3,6 @@ import CurrentTheme from '../../themes/current.theme';
 
 export default StyleSheet.create( {
     container: {
-        flex: 1,
         padding: 10,
         alignItems: 'center'
     },
