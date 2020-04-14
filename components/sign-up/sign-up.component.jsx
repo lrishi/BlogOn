@@ -47,7 +47,11 @@ class SignUp extends React.Component {
             await createUserProfileDocument( user, { displayName } );
             this.setState( INITIAL_STATE );
         } catch ( error ) {
-            alert( error.message );
+            if ( error.code === 'auth/invalid-email' ) {
+                alert( "Email address is not valid" );
+            } else {
+                alert( error.message );
+            }
             setTimeout( () => notifyIsLoading( false ), 1000 );
         }
     };

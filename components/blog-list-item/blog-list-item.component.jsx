@@ -80,7 +80,7 @@ class BlogListItem extends React.Component {
             <TouchableOpacity
                 activeOpacity={ 0.75 }
                 style={
-                    ( windowDimensions.isPortrait() || !windowDimensions.permissiveAspectRatio() ) ?
+                    ( windowDimensions.isPortrait() ) ?
                         styles.blogListItemContainer :
                         styles.landscapeBlogListItemContainer
                 }

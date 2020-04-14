@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, Text } from 'react-native';
 import { auth } from '../../firebase/firebase.utils';
+
 import { connect as connectRedux } from 'react-redux';
 import { blogActionSetIsLoading } from '../../redux/blog/blog.actions';
 
@@ -25,15 +26,25 @@ class SignIn extends React.Component {
     signInHandler = async event => {
         const { email, password } = this.state;
         const { notifyIsLoading } = this.props;
-        notifyIsLoading( true );
         event.preventDefault();
+
+        if ( email === "" || password === "" ) {
+            alert( "Email and/or password cannot be blank" );
+            return;
+        }
+
+        notifyIsLoading( true );
         try {
             await auth.signInWithEmailAndPassword( email, password );
+            this.setState( INITIAL_STATE );
         } catch ( error ) {
-            alert( error.message );
+            if ( error.code === 'auth/invalid-email' ) {
+                alert( "Email address is not valid" );
+            } else {
+                alert( error.message );
+            }
             setTimeout( () => notifyIsLoading( false ), 1000 );
         }
-        this.setState( INITIAL_STATE );
     };
 
     handleChange = ( name, value ) => {
@@ -69,6 +80,7 @@ class SignIn extends React.Component {
                     onPress={ this.signInHandler }
                     style={ styles.button }
                 />
+
             </ScrollView>
         );
     }

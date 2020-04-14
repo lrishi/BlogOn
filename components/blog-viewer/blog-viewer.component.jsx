@@ -50,7 +50,8 @@ class BlogViewer extends React.Component {
                 </ScrollView>
             );
         }
-        if ( windowDimensions.isPortrait() || !windowDimensions.permissiveAspectRatio() ) {
+        // console.log( windowDimensions.width, windowDimensions.height );
+        if ( windowDimensions.isPortrait() ) {
             return (
                 <ScrollView contentContainerStyle={ styles.container }>
                     <Image

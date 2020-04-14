@@ -148,6 +148,7 @@ const Navigator = ( { currentUser } ) => {
                     return {
                         ...backButton,
                         ...shareButton,
+                        headerTintColor: 'white',
                         headerMode: 'screen',
                         headerStyle: {
                             backgroundColor: CurrentTheme.Colors.primary,

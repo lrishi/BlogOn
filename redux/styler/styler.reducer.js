@@ -9,7 +9,7 @@ const INITIAL_STATE = {
         isLandscape: () => ( Dimensions.get( "window" ).width >= Dimensions.get( "window" ).height ),
         permissiveAspectRatio: () => (
             ( ( Math.min( Dimensions.get( "window" ).width, Dimensions.get( "window" ).height ) /
-                Math.max( Dimensions.get( "window" ).width, Dimensions.get( "window" ).height ) ) < 0.7 ? true : false )
+                Math.max( Dimensions.get( "window" ).width, Dimensions.get( "window" ).height ) ) < 0.6 ? false : false )
         )
     }
 };
