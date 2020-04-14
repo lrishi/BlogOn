@@ -8,6 +8,7 @@ import { blogActionEditBlog, blogActionViewBlog } from '../../redux/blog/blog.ac
 import { deleteBlogItem } from '../../firebase/firebase.utils';
 import { getGlobalStackNavigationContext } from '../navigator/navigator.exports';
 
+import { stylerSelectorGetDimensions } from '../../redux/styler/styler.selectors';
 import { DecoratedButtonSecondary } from '../../components/decorated-natives/decorated-natives.components';
 
 import styles from './blog-list-item.styles';
@@ -74,11 +75,15 @@ class BlogListItem extends React.Component {
     };
 
     render () {
-        const { blog, hasUser = false } = this.props;
+        const { blog, hasUser = false, windowDimensions } = this.props;
         return (
             <TouchableOpacity
                 activeOpacity={ 0.75 }
-                style={ styles.blogListItemContainer }
+                style={
+                    ( windowDimensions.isPortrait() || !windowDimensions.permissiveAspectRatio() ) ?
+                        styles.blogListItemContainer :
+                        styles.landscapeBlogListItemContainer
+                }
                 onPress={ this.handleblogActionViewBlog }>
 
                 <Image
@@ -140,4 +145,8 @@ const mapDispatchToProps = dispatch => ( {
     notifyIsLoading: ( item ) => dispatch( blogActionSetIsLoading( item ) ),
 } );
 
-export default connectRedux( null, mapDispatchToProps )( BlogListItem );
+const mapStateToProps = ( state ) => ( {
+    windowDimensions: stylerSelectorGetDimensions( state ),
+} );
+
+export default connectRedux( mapStateToProps, mapDispatchToProps )( BlogListItem );

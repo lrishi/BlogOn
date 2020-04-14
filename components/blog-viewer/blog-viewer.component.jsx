@@ -1,11 +1,12 @@
 import React from 'react';
-import { Share, ScrollView, Text, Image } from 'react-native';
+import { Share, ScrollView, View, Text, Image } from 'react-native';
 import { connect as connectRedux } from 'react-redux';
 
 import { selectBlogViewable } from '../../redux/blog/blog.selectors';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCalendarDay as clockIcon, faPen as authorIcon } from '@fortawesome/free-solid-svg-icons';
 import styles from "./blog-viewer.styles";
+import { stylerSelectorGetDimensions } from '../../redux/styler/styler.selectors';
 
 class BlogViewer extends React.Component {
 
@@ -41,7 +42,7 @@ class BlogViewer extends React.Component {
     };
 
     render () {
-        const { blog } = this.props;
+        const { blog, windowDimensions } = this.props;
         if ( blog == null ) {
             return (
                 <ScrollView>
@@ -49,29 +50,54 @@ class BlogViewer extends React.Component {
                 </ScrollView>
             );
         }
-        return (
-            <ScrollView contentContainerStyle={ styles.container }>
-                <Image
-                    source={ { uri: `data:image/gif;base64,${ blog.image }` } }
-                    style={ styles.coverImage } />
-                <Text style={ styles.title }>
-                    { blog.title }
-                </Text>
-                <Text style={ styles.metaData }>
-                    <FontAwesomeIcon icon={ authorIcon } size={ 14 } color={ 'grey' } /> { blog.author !== null ? blog.author.displayName.substring( 0, 20 ) : "Unknown" } { '\n' }
-                    <FontAwesomeIcon icon={ clockIcon } size={ 14 } color={ 'grey' } /> { blog.ts_added.toDate().toDateString().substring( 0, 20 ) }
-                </Text>
-                <Text style={ styles.blogText }>
-                    { blog.editor }
-                </Text>
-            </ScrollView>
-        );
+        if ( windowDimensions.isPortrait() || !windowDimensions.permissiveAspectRatio() ) {
+            return (
+                <ScrollView contentContainerStyle={ styles.container }>
+                    <Image
+                        source={ { uri: `data:image/gif;base64,${ blog.image }` } }
+                        style={ styles.coverImage } />
+                    <Text style={ styles.title }>
+                        { blog.title }
+                    </Text>
+                    <Text style={ styles.metaData }>
+                        <FontAwesomeIcon icon={ authorIcon } size={ 14 } color={ 'grey' } /> { blog.author !== null ? blog.author.displayName.substring( 0, 20 ) : "Unknown" } { '\n' }
+                        <FontAwesomeIcon icon={ clockIcon } size={ 14 } color={ 'grey' } /> { blog.ts_added.toDate().toDateString().substring( 0, 20 ) }
+                    </Text>
+                    <Text style={ styles.blogText }>
+                        { blog.editor }
+                    </Text>
+                </ScrollView>
+            );
+        } else {
+            return (
+                <ScrollView contentContainerStyle={ styles.container }>
+                    <Image
+                        source={ { uri: `data:image/gif;base64,${ blog.image }` } }
+                        style={ styles.landScapeCoverImage } />
+                    <View style={ styles.landScapeWrapper }>
+                        <View style={ styles.mdataWrapper }>
+                            <Text style={ styles.landScapeTitle }>
+                                { blog.title }
+                            </Text>
+                            <Text style={ styles.landScapeMdata }>
+                                <FontAwesomeIcon icon={ authorIcon } size={ 14 } color={ 'grey' } /> { blog.author !== null ? blog.author.displayName.substring( 0, 20 ) : "Unknown" } { '\n' }
+                                <FontAwesomeIcon icon={ clockIcon } size={ 14 } color={ 'grey' } /> { blog.ts_added.toDate().toDateString().substring( 0, 20 ) }
+                            </Text>
+                        </View>
+                        <Text style={ styles.landScapeBlogText }>
+                            { blog.editor }
+                        </Text>
+                    </View>
+                </ScrollView>
+            );
+        }
     }
 
 }
 
 const mapStateToProps = ( state ) => ( {
     blog: selectBlogViewable( state ),
+    windowDimensions: stylerSelectorGetDimensions( state ),
 } );
 
 export default connectRedux( mapStateToProps )( BlogViewer );

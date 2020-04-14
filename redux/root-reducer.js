@@ -3,9 +3,10 @@ import { persistReducer } from 'redux-persist';
 import { AsyncStorage } from 'react-native';
 import userReducer from './user/user.reducer';
 import blogReducer from './blog/blog.reducer';
+import stylerReducer from './styler/styler.reducer';
+
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 
-// AsyncStorage.clear();
 
 const persistConfig = {
     key: 'root',
@@ -17,7 +18,8 @@ const persistConfig = {
 const rootReducer = combineReducers(
     {
         user: userReducer,
-        blog: blogReducer
+        blog: blogReducer,
+        styler: stylerReducer
     } );
 
 export default persistReducer( persistConfig, rootReducer );

@@ -95,6 +95,7 @@ class BlogList extends React.Component {
             );
         }
     };
+
     render () {
         const { navigation = null } = this.props;
         if ( navigation != null ) {
@@ -117,7 +118,6 @@ class BlogList extends React.Component {
                 } }
                 ListEmptyComponent={ this.listEmptyComponent() }
             />
-
         );
     };
 

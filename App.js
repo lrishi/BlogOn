@@ -5,7 +5,8 @@ import {
 } from 'expo';
 
 import {
-    SafeAreaView
+    SafeAreaView,
+    Dimensions
 } from 'react-native';
 
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -45,6 +46,10 @@ import {
 } from './redux/blog/blog.actions';
 
 import {
+    stylerActionSetDimensions,
+} from './redux/styler/styler.actions';
+
+import {
     getGlobalStackNavigationContext
 } from './components/navigator/navigator.exports';
 
@@ -76,7 +81,7 @@ class App extends React.Component {
 
         const {
             notifyIsLoading,
-            blogActionViewBlogItem
+            viewBlogItem
         } = this.props;
 
         notifyIsLoading( true );
@@ -97,7 +102,7 @@ class App extends React.Component {
                             author = { displayName: "Anonymous Author" };
                         }
                         const blog = { ...dres, author: author };
-                        blogActionViewBlogItem( blog );
+                        viewBlogItem( blog );
                         getGlobalStackNavigationContext().navigate( 'BlogViewer' );
                         setTimeout( () => notifyIsLoading( false ), 1000 );
                     } else {
@@ -119,6 +124,15 @@ class App extends React.Component {
         this.deepLinkHandlingInProgress = false;
     }
 
+    handleDimensionChange = () => {
+        const { setDimensions } = this.props;
+        setDimensions( {
+            width: Dimensions.get( "window" ).width,
+            height: Dimensions.get( "window" ).height,
+        } );
+        console.log( "Dimensions Changed" );
+    };
+
     componentDidMount () {
         const {
             setCurrentUser,
@@ -131,6 +145,8 @@ class App extends React.Component {
                 Linking.addEventListener( 'url',
                     ( event ) => this.handleDeepLink( event ) );
             } );
+
+        Dimensions.addEventListener( "change", this.handleDimensionChange );
 
         notifyIsLoading( true );
         this.applicationIsLoading = true;
@@ -169,6 +185,7 @@ class App extends React.Component {
         Linking.removeEventListener( 'url', this.handleDeepLink );
         this.unsubscribeFromAuth();
         this.deepLinkHandlingInProgress = false;
+        Dimensions.removeEventListener( "change", this.handleDimensionChange );
     }
 
     render () {
@@ -193,8 +210,9 @@ const mapStateToProps = ( state ) => ( {
 
 const mapDispatchToProps = dispatch => ( {
     setCurrentUser: ( item ) => dispatch( userActionSetCurrentUser( item ) ),
-    blogActionViewBlogItem: ( item ) => dispatch( blogActionViewBlog( item ) ),
+    viewBlogItem: ( item ) => dispatch( blogActionViewBlog( item ) ),
     notifyIsLoading: ( item ) => dispatch( blogActionSetIsLoading( item ) ),
+    setDimensions: ( item ) => dispatch( stylerActionSetDimensions( item ) )
 } );
 
 const ReduxApp = connectRedux( mapStateToProps, mapDispatchToProps )( App );
