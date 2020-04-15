@@ -10,7 +10,10 @@ import { createStructuredSelector } from 'reselect';
 import { blogActionSetIsLoading } from '../../redux/blog/blog.actions';
 import { blogActionEditBlog } from '../../redux/blog/blog.actions';
 
-import { DecoratedButtonInfo } from '../../components/decorated-natives/decorated-natives.components';
+import {
+    DecoratedButtonInfo,
+    DecoratedButtonSecondary
+} from '../../components/decorated-natives/decorated-natives.components';
 import { getGlobalStackNavigationContext } from '../../components/navigator/navigator.exports';
 
 import styles from './blog-list.styles';
@@ -19,6 +22,7 @@ class BlogList extends React.Component {
     constructor( props ) {
         super( props );
         this.hasUser = this.props.hasOwnProperty( 'hasUser' ) ? this.props.hasUser : false;
+        this.endOfList = false;
     }
 
     refreshData = async () => {
@@ -39,6 +43,8 @@ class BlogList extends React.Component {
             listUserItem( listRef );
             setTimeout( () => setRefreshing( { user: false } ), 1000 );
         }
+        this.endOfList = false;
+
     };
 
     refreshCallBack = async () => {
@@ -70,6 +76,33 @@ class BlogList extends React.Component {
 
     };
 
+    handleLoadMore = async () => {
+        const {
+            notifyIsLoading,
+            blogList,
+            userBlogList,
+            listItem,
+            listUserItem,
+            currentUser
+        } = this.props;
+        const currentBlogList = this.hasUser ? userBlogList : blogList;
+        const updateCall = this.hasUser ? listUserItem : listItem;
+        notifyIsLoading( true );
+        let nBlogData = null;
+        if ( this.hasUser ) {
+            nBlogData = await getUserBlogData( currentUser, currentBlogList[ currentBlogList.length - 1 ] );
+        } else {
+            nBlogData = await getBlogData( currentBlogList[ currentBlogList.length - 1 ] );
+        }
+        this.endOfList = ( nBlogData.length === 0 );
+        tdata = [];
+        const finalBlogList = currentBlogList.concat( nBlogData );
+        finalBlogList.forEach( ( item ) => tdata.push( item.id ) );
+        console.log( tdata );
+        await updateCall( finalBlogList );
+        setTimeout( () => notifyIsLoading( false ), 2000 );
+    };
+
     listEmptyComponent = () => {
         const { isRefreshing, hasUser } = this.props;
         if ( hasUser ) {
@@ -96,6 +129,24 @@ class BlogList extends React.Component {
         }
     };
 
+    footerComponent = () => {
+        const { isRefreshing, hasUser } = this.props;
+        if ( isRefreshing.global || ( hasUser && isRefreshing.user ) ) {
+            return <View></View>;
+        }
+        return ( this.endOfList ?
+            ( <Text style={ styles.endOfList }>No more posts to load</Text> ) :
+            (
+                <View>
+                    <DecoratedButtonSecondary
+                        title="Load More"
+                        onPress={ this.handleLoadMore }
+                        style={ styles.loadMoreButton }
+                    />
+                </View>
+            ) );
+    };
+
     render () {
         const { navigation = null } = this.props;
         if ( navigation != null ) {
@@ -117,6 +168,7 @@ class BlogList extends React.Component {
                     );
                 } }
                 ListEmptyComponent={ this.listEmptyComponent() }
+                ListFooterComponent={ this.footerComponent() }
             />
         );
     };

@@ -41,10 +41,20 @@ export const deleteBlogItem = async ( currentUser, blogItem ) => {
     } );
 };
 
-export const getBlogData = async () => {
-    const snapshot = await firestore
-        .collection( "blogs" ).orderBy( "ts_added", "desc" )
-        .limit( 10 ).get();
+export const getBlogData = async ( lastVisible = null ) => {
+    let snapshot = null;
+
+    if ( lastVisible === null ) {
+        snapshot = await firestore
+            .collection( "blogs" ).orderBy( "ts_added", "desc" )
+            .limit( 5 ).get();
+    } else {
+        snapshot = await firestore
+            .collection( "blogs" ).orderBy( "ts_added", "desc" )
+            .startAfter( lastVisible.ts_added )
+            .limit( 5 ).get();
+    }
+
     const snapShotData = async () => {
         var tdata = [];
         snapshot.forEach( ( fed ) => {
@@ -66,7 +76,7 @@ export const getBlogData = async () => {
     return await snapShotData();
 };
 
-export const getUserBlogData = async ( currentUser ) => {
+export const getUserBlogData = async ( currentUser, lastVisible = null ) => {
     if ( currentUser === null ) {
         alert( "You need to be logged in to perform this action." );
         return null;
@@ -76,11 +86,21 @@ export const getUserBlogData = async ( currentUser ) => {
         alert( "There are Issues with your sign in data. Please relogin!" );
         return null;
     }
-    const snapshot = await firestore
-        .collection( "blogs" )
-        .where( "author", '==', userRef )
-        .orderBy( "ts_added", "desc" )
-        .limit( 10 ).get();
+    let snapshot = null;
+    if ( lastVisible === null ) {
+        snapshot = await firestore
+            .collection( "blogs" )
+            .where( "author", '==', userRef )
+            .orderBy( "ts_added", "desc" )
+            .limit( 5 ).get();
+    } else {
+        snapshot = await firestore
+            .collection( "blogs" )
+            .where( "author", '==', userRef )
+            .orderBy( "ts_added", "desc" )
+            .startAfter( lastVisible.ts_added )
+            .limit( 5 ).get();
+    }
     const snapShotData = async () => {
         var tdata = [];
         snapshot.forEach( ( fed ) => {

@@ -7,6 +7,7 @@ import stylerReducer from './styler/styler.reducer';
 
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 
+//AsyncStorage.clear();
 
 const persistConfig = {
     key: 'root',
