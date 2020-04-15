@@ -131,9 +131,25 @@ class BlogList extends React.Component {
 
     footerComponent = () => {
         const { isRefreshing, hasUser } = this.props;
-        if ( isRefreshing.global || ( hasUser && isRefreshing.user ) ) {
-            return <View></View>;
+        const { blogList, userBlogList } = this.props;
+        if ( hasUser ) {
+            const { userBlogList } = this.props;
+            if ( isRefreshing.user ||
+                userBlogList === null ||
+                userBlogList.length === undefined ||
+                userBlogList.length === 0 ) {
+                return ( <View></View> );
+            }
+        } else {
+            const { blogList } = this.props;
+            if ( isRefreshing.global ||
+                blogList === null ||
+                blogList.length === undefined ||
+                blogList.length === 0 ) {
+                return ( <View></View> );
+            }
         }
+
         return ( this.endOfList ?
             ( <Text style={ styles.endOfList }>No more posts to load</Text> ) :
             (
